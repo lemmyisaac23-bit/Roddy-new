@@ -40,7 +40,7 @@ const features = [
   {
     icon: MessageCircle,
     title: "24/7 Support",
-    description: "Dedicated specialists available round the clock via live chat, email, and Telegram.",
+    description: "Dedicated specialists available round the clock via live chat and email.",
     iconColor: "text-rose-400",
     iconBg: "bg-rose-500/10",
     iconBorder: "border-rose-500/20",

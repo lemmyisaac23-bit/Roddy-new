@@ -29,7 +29,6 @@ import {
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { UserSidebar } from '@/components/UserSidebar';
-import { WHATSAPP_LINK } from '@/constants/contact';
 import { depositAddressQrUrl } from '@/lib/depositQr';
 
 interface MiningPlan {

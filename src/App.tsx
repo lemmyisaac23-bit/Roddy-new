@@ -6,7 +6,6 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { MiningProvider } from "@/contexts/MiningContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
-import { FloatingContactButtons } from "@/components/FloatingContactButtons";
 import Index from "./pages/Index";
 import Login from "./pages/Signin";
 import Signup from "./pages/Signup";
@@ -35,7 +34,6 @@ const App = () => (
         <Toaster />
         <Sonner />
         <HashRouter>
-          <FloatingContactButtons />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
