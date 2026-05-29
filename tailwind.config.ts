@@ -54,11 +54,22 @@ export default {
           gold: "hsl(var(--crypto-gold))",
           "gold-light": "hsl(var(--crypto-gold-light))",
         },
+        brand: {
+          primary: "#00b4e6",
+          "primary-dark": "#007aa8",
+          "primary-light": "#00d4ff",
+          accent: "#14b8a6",
+          "accent-dark": "#0d9488",
+          navy: "#0f2744",
+          "navy-card": "#132f4c",
+          "navy-deep": "#0a1e35",
+        },
       },
       backgroundImage: {
         "gradient-hero": "var(--gradient-hero)",
         "gradient-card": "var(--gradient-card)",
         "gradient-gold": "var(--gradient-gold)",
+        "brand-gradient": "linear-gradient(135deg, #00b4e6 0%, #14b8a6 100%)",
       },
       boxShadow: {
         glow: "var(--shadow-glow)",

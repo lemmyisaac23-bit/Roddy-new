@@ -101,18 +101,18 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#040a0f] flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-[#0a1e35] flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background effects */}
       <div className="absolute inset-0 circuit-bg opacity-60 pointer-events-none" />
       <div className="absolute inset-0 diagonal-lines pointer-events-none" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-3xl opacity-10 pointer-events-none" style={{ background: "radial-gradient(circle, #00e5ff, transparent)" }} />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-3xl opacity-10 pointer-events-none" style={{ background: "radial-gradient(circle, #00b4e6, transparent)" }} />
 
       <div className="w-full max-w-md space-y-6 relative z-10">
         <div className="text-center">
           <Link to="/" className="inline-flex items-center gap-2.5 justify-center">
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center"
-              style={{ background: "linear-gradient(135deg, #00e5ff 0%, #00c853 100%)" }}
+              style={{ background: "linear-gradient(135deg, #00b4e6 0%, #14b8a6 100%)" }}
             >
               <span className="text-black font-black text-lg">₿</span>
             </div>
@@ -123,7 +123,7 @@ const Login = () => {
           </Link>
         </div>
 
-        <Card className="shadow-2xl border border-white/10 bg-[#060d13]/80 backdrop-blur">
+        <Card className="shadow-2xl border border-white/10 bg-[#132f4c]/80 backdrop-blur">
           <CardHeader className="text-center pb-6">
             <CardTitle className="text-2xl font-bold text-white">Welcome Back</CardTitle>
             <CardDescription className="text-white/60">Sign in to access your Grillhashpowermine dashboard</CardDescription>

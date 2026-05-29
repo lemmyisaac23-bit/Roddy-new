@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 
@@ -40,11 +40,18 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+/** Must stay in sync with is_admin() in fix-admin-data-access.sql */
+const ADMIN_EMAILS = ['warrenokumu98@gmail.com'];
+
+const isAdminEmail = (email?: string | null) =>
+  Boolean(email && ADMIN_EMAILS.includes(email.trim().toLowerCase()));
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const profileFetchRef = useRef<{ userId: string; promise: Promise<void> } | null>(null);
 
   useEffect(() => {
     // Get initial session — keep loading=true until profile is fetched
@@ -81,42 +88,80 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
+  /** RLS uses profiles.role = admin — sync DB when logging in with a known admin email */
+  const ensureAdminRoleInDb = async (userId: string, email?: string | null) => {
+    if (!isAdminEmail(email)) return;
+    const { error } = await supabase
+      .from('profiles')
+      .update({ role: 'admin' })
+      .eq('user_id', userId);
+    if (error) {
+      console.warn('[AuthContext] Could not set admin role in DB (run fix-admin-data-access.sql):', error.message);
+      return;
+    }
+    console.log('[AuthContext] Admin role synced in database for', email);
+  };
+
   const fetchProfile = async (userId: string) => {
+    if (profileFetchRef.current?.userId === userId) {
+      return profileFetchRef.current.promise;
+    }
+
+    const run = async () => {
+      try {
+        await fetchProfileOnce(userId);
+      } finally {
+        if (profileFetchRef.current?.userId === userId) {
+          profileFetchRef.current = null;
+        }
+      }
+    };
+
+    const promise = run();
+    profileFetchRef.current = { userId, promise };
+    return promise;
+  };
+
+  const fetchProfileOnce = async (userId: string) => {
     try {
       console.log('[AuthContext] Fetching profile for user:', userId);
-      
-      // Add timeout to prevent infinite loading (reduced to 3 seconds)
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Profile fetch timeout')), 3000)
-      );
 
-      // Optimize query - only select needed fields. Include mining_enabled if column exists.
-      const selectWithMining = 'id, user_id, email, full_name, role, referral_code, referral_balance, mining_stop_balance, mining_enabled, username, mobile, country_code, country, address, state, zip_code, city, usdt_wallet_address, two_fa_enabled, created_at, updated_at';
-      const selectWithoutMining = 'id, user_id, email, full_name, role, referral_code, referral_balance, mining_stop_balance, username, mobile, country_code, country, address, state, zip_code, city, usdt_wallet_address, two_fa_enabled, created_at, updated_at';
+      // Core columns only — avoids slow/failed queries when optional columns are missing
+      const coreColumns =
+        'id, user_id, email, full_name, role, referral_code, referral_balance, mining_stop_balance, created_at, updated_at';
 
-      let fetchPromise = supabase
+      let { data, error } = await supabase
         .from('profiles')
-        .select(selectWithMining)
+        .select(coreColumns)
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
-      let { data, error } = await Promise.race([fetchPromise, timeoutPromise]) as any;
+      // Optional: mining_enabled (may not exist in older schemas)
+      if (!error && data) {
+        try {
+          const { data: extra, error: extraErr } = await supabase
+            .from('profiles')
+            .select('mining_enabled')
+            .eq('user_id', userId)
+            .maybeSingle();
+          if (!extraErr && extra && typeof extra.mining_enabled === 'boolean') {
+            data = { ...data, mining_enabled: extra.mining_enabled };
+          } else {
+            data = { ...data, mining_enabled: true };
+          }
+        } catch {
+          data = { ...data, mining_enabled: true };
+        }
+      }
 
-      // If fetch failed due to missing column (e.g. mining_enabled not migrated yet), retry without it
       if (error && (error.code === '42703' || error.message?.includes('mining_enabled'))) {
-        console.log('[AuthContext] Retrying profile fetch without mining_enabled (column may not exist yet)');
         const fallback = await supabase
           .from('profiles')
-          .select(selectWithoutMining)
+          .select(coreColumns)
           .eq('user_id', userId)
-          .single();
-        if (!fallback.error) {
-          data = { ...fallback.data, mining_enabled: true };
-          error = null;
-        } else {
-          // Retry also failed — pass the fallback error forward so PGRST116 creation logic can trigger
-          error = fallback.error;
-        }
+          .maybeSingle();
+        data = fallback.data ? { ...fallback.data, mining_enabled: true } : null;
+        error = fallback.error;
       }
 
       if (error) {
@@ -130,7 +175,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           try {
             const { data: { user: authUser } } = await supabase.auth.getUser();
             if (authUser?.email) {
-              const isAdmin = authUser.email.toLowerCase() === 'warrenokumu98@gmail.com';
+              const isAdmin = isAdminEmail(authUser.email);
               console.log('[AuthContext] Creating profile with role:', isAdmin ? 'admin' : 'user');
               
               // Generate referral code (simple hash-based)
@@ -175,12 +220,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           console.warn('[AuthContext] Profile fetch failed, continuing without profile');
           setProfile(null);
         }
-      } else {
+      } else if (data) {
         console.log('[AuthContext] Profile fetched successfully:', {
           email: data.email,
           role: data.role,
         });
+        if (isAdminEmail(data.email) && data.role !== 'admin') {
+          await ensureAdminRoleInDb(userId, data.email);
+          data = { ...data, role: 'admin' as const };
+        }
         setProfile(data);
+      } else {
+        const { data: authData } = await supabase.auth.getUser();
+        const authEmail = authData.user?.email;
+        if (isAdminEmail(authEmail)) {
+          await ensureAdminRoleInDb(userId, authEmail);
+          setProfile({
+            id: userId,
+            user_id: userId,
+            email: authEmail!,
+            full_name: null,
+            role: 'admin',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          });
+        } else {
+          setProfile(null);
+        }
       }
     } catch (error: any) {
       console.error('[AuthContext] Unexpected error fetching profile:', error);
@@ -194,37 +260,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signIn = async (email: string, password: string) => {
     console.log('[AuthContext] Attempting sign in with email:', email);
-    setLoading(true);
 
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.trim().toLowerCase(),
-        password,
-      });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.trim().toLowerCase(),
+      password,
+    });
 
-      if (error) {
-        console.error('[AuthContext] Sign in error:', error.message);
-        setLoading(false);
-        throw error;
-      }
-
-      if (data.user) {
-        console.log('[AuthContext] Sign in successful');
-        setUser(data.user);
-        // Await profile fetch so the role is known before redirect
-        await fetchProfile(data.user.id).catch((profileError) => {
-          console.warn('[AuthContext] Profile fetch error:', profileError);
-          setProfile(null);
-          setLoading(false);
-        });
-      } else {
-        console.warn('[AuthContext] Sign in succeeded but no user data');
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error('[AuthContext] Unexpected error during sign in:', error);
-      setLoading(false);
+    if (error) {
+      console.error('[AuthContext] Sign in error:', error.message);
       throw error;
+    }
+
+    if (data.session) {
+      setSession(data.session);
+    }
+    if (data.user) {
+      console.log('[AuthContext] Sign in successful — profile loads in background');
+      setUser(data.user);
+      setLoading(false);
+      if (isAdminEmail(data.user.email)) {
+        await ensureAdminRoleInDb(data.user.id, data.user.email);
+      }
+      void fetchProfile(data.user.id);
+    } else {
+      console.warn('[AuthContext] Sign in succeeded but no user data');
+      setLoading(false);
     }
   };
 
@@ -326,7 +386,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     signUp,
     signOut,
     refreshProfile,
-    isAdmin: profile?.role === 'admin' || user?.email?.toLowerCase() === 'warrenokumu98@gmail.com',
+    isAdmin: profile?.role === 'admin' || isAdminEmail(user?.email),
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

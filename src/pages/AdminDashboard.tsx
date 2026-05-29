@@ -149,36 +149,68 @@ const AdminDashboard = () => {
   }, [user, isAdmin, authLoading, navigate]);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       console.log('Admin Dashboard: Fetching data...', { userId: user?.id, isAdmin });
 
+      const withTimeout = async <T,>(promise: PromiseLike<T>, ms = 12000): Promise<T> => {
+        let timer: ReturnType<typeof setTimeout>;
+        const timeout = new Promise<never>((_, reject) => {
+          timer = setTimeout(() => reject(new Error('Request timed out. Check Supabase connection and RLS policies.')), ms);
+        });
+        try {
+          return await Promise.race([Promise.resolve(promise), timeout]);
+        } finally {
+          clearTimeout(timer!);
+        }
+      };
+
+      const profileColumns =
+        'id, user_id, email, full_name, role, created_at, referral_balance';
+
       // Fetch all users — gracefully handle missing table (schema not yet applied)
-      const { data: allUsers, error: usersError } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const { data: allUsers, error: usersError } = await withTimeout(
+        supabase.from('profiles').select(profileColumns).order('created_at', { ascending: false })
+      );
 
       if (usersError) {
         if (usersError.code === '42P01' || usersError.message?.includes('does not exist') || String(usersError.code) === '404') {
-          // Schema not applied yet — show dashboard with empty data
           console.warn('AdminDashboard: Tables not found. Please run the SQL schema in Supabase.');
           toast({
             title: 'Database not set up yet',
             description: 'Please run grillhashpowermine-full-schema.sql in your Supabase SQL Editor first.',
             variant: 'destructive',
           });
-          setLoading(false);
           return;
         }
-        throw usersError;
+        const rlsBlocked =
+          usersError.code === '42501' ||
+          usersError.message?.toLowerCase().includes('permission') ||
+          usersError.message?.toLowerCase().includes('policy');
+        if (rlsBlocked) {
+          toast({
+            title: 'Admin access blocked by database rules',
+            description:
+              'Run fix-admin-data-access.sql in Supabase SQL Editor, then log out and log in again.',
+            variant: 'destructive',
+          });
+          setUsers([]);
+        } else {
+          throw usersError;
+        }
+      } else {
+        setUsers(allUsers || []);
+        if ((allUsers?.length ?? 0) === 0) {
+          console.warn('AdminDashboard: No profiles returned — check RLS or empty database.');
+        } else {
+          console.log('AdminDashboard: Loaded', allUsers?.length, 'users');
+        }
       }
-      setUsers(allUsers || []);
 
       // Fetch all tickets
-      const { data: ticketData, error: ticketError } = await supabase
-        .from('support_tickets')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const { data: ticketData, error: ticketError } = await withTimeout(
+        supabase.from('support_tickets').select('*').order('created_at', { ascending: false })
+      );
 
       if (ticketError) {
         console.warn('Support tickets fetch failed:', ticketError.message);
@@ -188,10 +220,12 @@ const AdminDashboard = () => {
       }
 
       // Fetch all mining stats
-      const { data: stats, error: statsError } = await supabase
-        .from('mining_stats')
-        .select('user_id, hash_rate, total_mined, daily_earnings')
-        .order('total_mined', { ascending: false });
+      const { data: stats, error: statsError } = await withTimeout(
+        supabase
+          .from('mining_stats')
+          .select('user_id, hash_rate, total_mined, daily_earnings')
+          .order('total_mined', { ascending: false })
+      );
 
       if (statsError) {
         console.error('Error fetching mining stats:', statsError);
@@ -207,10 +241,12 @@ const AdminDashboard = () => {
         setAllStats([]);
       }
 
-      const { data: addrRows, error: addrErr } = await supabase
-        .from('deposit_addresses')
-        .select('id, gateway, address, qr_code_url, is_active, min_amount, max_amount')
-        .order('gateway');
+      const { data: addrRows, error: addrErr } = await withTimeout(
+        supabase
+          .from('deposit_addresses')
+          .select('id, gateway, address, qr_code_url, is_active, min_amount, max_amount')
+          .order('gateway')
+      );
       if (addrErr) {
         console.error('deposit_addresses fetch:', addrErr);
         setDepositAddressRows([]);
@@ -223,7 +259,6 @@ const AdminDashboard = () => {
         setDepositActiveDrafts(Object.fromEntries(rows.map((d) => [d.id, d.is_active !== false])));
       }
 
-      setLoading(false);
     } catch (error: any) {
       console.error('Error in AdminDashboard fetchData:', error);
       toast({
@@ -231,6 +266,7 @@ const AdminDashboard = () => {
         description: error.message || 'Failed to fetch dashboard data',
         variant: 'destructive',
       });
+    } finally {
       setLoading(false);
     }
   };
@@ -475,49 +511,58 @@ const AdminDashboard = () => {
     }
   };
 
-  if (authLoading || loading) {
+  const waitingForAuth = authLoading && !user;
+  const adminByEmail = user?.email?.toLowerCase() === 'warrenokumu98@gmail.com';
+
+  if (waitingForAuth || loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#040a0f] text-white">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-800">
         <div className="text-center space-y-4">
-          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-teal-400"></div>
-          <p className="text-white/70">Preparing admin dashboard...</p>
-          <p className="text-white/30 text-xs max-w-xs">
-            If this takes too long, make sure the SQL schema has been run in your Supabase project.
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-[#2563eb]"></div>
+          <p className="text-slate-600">Preparing admin dashboard...</p>
+          <p className="text-slate-400 text-xs max-w-xs">
+            {waitingForAuth
+              ? 'Signing you in...'
+              : 'Loading users and settings. If this fails, run grillhashpowermine-full-schema.sql in Supabase.'}
           </p>
         </div>
       </div>
     );
   }
 
+  if (user && !isAdmin && !adminByEmail) {
+    return null;
+  }
+
   return (
-    <div className="min-h-screen bg-[#040a0f] text-white">
-      <header className="border-b border-white/5 bg-[#091328]/80 backdrop-blur">
+    <div className="min-h-screen bg-slate-50 text-slate-800">
+      <header className="border-b border-slate-200 bg-white shadow-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
           <div className="flex items-center gap-2 sm:gap-3">
-            <Zap className="h-5 w-5 sm:h-6 sm:w-6 text-teal-400" />
+            <Zap className="h-5 w-5 sm:h-6 sm:w-6 text-[#2563eb]" />
             <div>
-              <p className="text-xs sm:text-sm text-white/50">Grillhashpowermine</p>
-              <p className="text-base sm:text-lg font-semibold">Admin Control Center</p>
+              <p className="text-xs sm:text-sm text-slate-500">Grillhashpowermine</p>
+              <p className="text-base sm:text-lg font-semibold text-slate-900">Admin Control Center</p>
             </div>
           </div>
           {/* Mobile Menu Button */}
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden text-white hover:bg-white/10"
+            className="lg:hidden text-slate-700 hover:bg-slate-100"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
           
-          <nav className={`${mobileMenuOpen ? 'flex' : 'hidden'} lg:flex flex-col lg:flex-row absolute lg:static top-full left-0 right-0 lg:top-auto lg:left-auto lg:right-auto bg-[#091328] lg:bg-transparent border-t lg:border-t-0 border-white/5 lg:border-0 p-4 lg:p-0 gap-4 lg:gap-6 text-sm font-medium z-50`}>
+          <nav className={`${mobileMenuOpen ? 'flex' : 'hidden'} lg:flex flex-col lg:flex-row absolute lg:static top-full left-0 right-0 lg:top-auto lg:left-auto lg:right-auto bg-white lg:bg-transparent border-t lg:border-t-0 border-slate-200 lg:border-0 p-4 lg:p-0 gap-4 lg:gap-6 text-sm font-medium z-50 shadow-lg lg:shadow-none`}>
             <button 
               onClick={() => {
                 setActiveView('overview');
                 setMobileMenuOpen(false);
               }}
               className={`flex items-center gap-2 transition-colors py-2 lg:py-0 ${
-                activeView === 'overview' ? 'text-teal-400' : 'text-white/70 hover:text-white'
+                activeView === 'overview' ? 'text-[#2563eb]' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <Home className="h-4 w-4" /> Overview
@@ -528,7 +573,7 @@ const AdminDashboard = () => {
                 setMobileMenuOpen(false);
               }}
               className={`flex items-center gap-2 transition-colors py-2 lg:py-0 ${
-                activeView === 'users' ? 'text-teal-400' : 'text-white/70 hover:text-white'
+                activeView === 'users' ? 'text-[#2563eb]' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <Users className="h-4 w-4" /> Users
@@ -539,7 +584,7 @@ const AdminDashboard = () => {
                 setMobileMenuOpen(false);
               }}
               className={`flex items-center gap-2 transition-colors py-2 lg:py-0 ${
-                activeView === 'analytics' ? 'text-teal-400' : 'text-white/70 hover:text-white'
+                activeView === 'analytics' ? 'text-[#2563eb]' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <BarChart3 className="h-4 w-4" /> Analytics
@@ -550,7 +595,7 @@ const AdminDashboard = () => {
                 setMobileMenuOpen(false);
               }}
               className={`flex items-center gap-2 transition-colors py-2 lg:py-0 ${
-                activeView === 'deposit-addresses' ? 'text-teal-400' : 'text-white/70 hover:text-white'
+                activeView === 'deposit-addresses' ? 'text-[#2563eb]' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <Wallet className="h-4 w-4" /> Deposit addresses
@@ -561,7 +606,7 @@ const AdminDashboard = () => {
                 setMobileMenuOpen(false);
               }}
               className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
-              activeView === 'settings' ? 'bg-teal-500 text-black font-bold' : 'text-white/70 hover:bg-white/5'
+              activeView === 'settings' ? 'bg-[#2563eb] text-white font-bold' : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
             <Settings className="h-5 w-5" />
@@ -570,7 +615,7 @@ const AdminDashboard = () => {
           <button
             onClick={() => { setActiveView('support'); setMobileMenuOpen(false); }}
             className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
-              activeView === 'support' ? 'bg-teal-500 text-black font-bold' : 'text-white/70 hover:bg-white/5'
+              activeView === 'support' ? 'bg-[#2563eb] text-white font-bold' : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
             <Headphones className="h-5 w-5" />
@@ -578,11 +623,11 @@ const AdminDashboard = () => {
           </button>
         </nav>
           <div className="flex items-center gap-2 sm:gap-4">
-            <div className="hidden text-right text-xs text-white/60 sm:block">
-              <p className="font-semibold text-white">{profile?.full_name || profile?.email}</p>
+            <div className="hidden text-right text-xs text-slate-500 sm:block">
+              <p className="font-semibold text-slate-900">{profile?.full_name || profile?.email}</p>
               <p>System Administrator</p>
             </div>
-            <Button variant="outline" className="border-teal-500 text-teal-400 hover:bg-teal-500/10 text-sm px-3 lg:px-4" onClick={handleSignOut}>
+            <Button variant="outline" className="border-[#2563eb] text-[#2563eb] hover:bg-blue-50 text-sm px-3 lg:px-4" onClick={handleSignOut}>
               <LogOut className="mr-2 h-4 w-4" />
               <span className="hidden sm:inline">Logout</span>
             </Button>
@@ -591,25 +636,25 @@ const AdminDashboard = () => {
       </header>
 
       <main className="mx-auto flex max-w-7xl flex-col gap-4 sm:gap-6 px-4 sm:px-6 py-4 sm:py-8 lg:flex-row">
-        <aside className="w-full rounded-2xl border border-white/5 bg-[#0B152F]/80 p-4 sm:p-6 lg:w-72">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-white/50">Quick Metrics</h2>
+        <aside className="w-full rounded-2xl border border-slate-200 bg-white/80 p-4 sm:p-6 lg:w-72">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-slate-500">Quick Metrics</h2>
           <div className="mt-4 space-y-4 text-sm">
-            <div className="rounded-xl bg-[#0F1F3F] p-4">
-              <p className="text-white/50">Total Users</p>
-              <p className="text-3xl font-semibold text-teal-400">{users.length}</p>
-              <p className="text-xs text-white/40">{users.filter((u) => u.role === 'admin').length} admins / {users.length} accounts</p>
+            <div className="rounded-xl bg-slate-50 p-4">
+              <p className="text-slate-500">Total Users</p>
+              <p className="text-3xl font-semibold text-[#2563eb]">{users.length}</p>
+              <p className="text-xs text-slate-400">{users.filter((u) => u.role === 'admin').length} admins / {users.length} accounts</p>
             </div>
-            <div className="rounded-xl bg-[#0F1F3F] p-4">
-              <p className="text-white/50">Total Mined</p>
-              <p className="text-3xl font-semibold text-teal-400">{allStats.reduce((sum, stat) => sum + stat.total_mined, 0).toFixed(2)} BTC</p>
-              <p className="text-xs text-white/40">Across all users</p>
+            <div className="rounded-xl bg-slate-50 p-4">
+              <p className="text-slate-500">Total Mined</p>
+              <p className="text-3xl font-semibold text-[#2563eb]">{allStats.reduce((sum, stat) => sum + stat.total_mined, 0).toFixed(2)} BTC</p>
+              <p className="text-xs text-slate-400">Across all users</p>
             </div>
-            <div className="rounded-xl bg-[#0F1F3F] p-4">
-              <p className="text-white/50">Hash Power</p>
-              <p className="text-3xl font-semibold text-teal-400">
+            <div className="rounded-xl bg-slate-50 p-4">
+              <p className="text-slate-500">Hash Power</p>
+              <p className="text-3xl font-semibold text-[#2563eb]">
                 {allStats.reduce((sum, stat) => sum + stat.hash_rate, 0).toFixed(2)} TH/s
               </p>
-              <p className="text-xs text-white/40">Global hash rate</p>
+              <p className="text-xs text-slate-400">Global hash rate</p>
             </div>
           </div>
         </aside>
@@ -618,51 +663,51 @@ const AdminDashboard = () => {
           {/* Overview View */}
           {activeView === 'overview' && (
             <>
-          <div className="grid gap-6 rounded-2xl border border-white/5 bg-[#0B152F]/80 p-6 sm:grid-cols-2">
+          <div className="grid gap-6 rounded-2xl border border-slate-200 bg-white/80 p-6 sm:grid-cols-2">
             <div>
               <h1 className="text-2xl font-semibold">Welcome back, {profile?.full_name || profile?.email}</h1>
-              <p className="mt-2 text-white/60">
+              <p className="mt-2 text-slate-500">
                 Monitor global operations, manage customer support, and keep an eye on system security from one place. All stats are refreshed
                 every few minutes.
               </p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-[#0F1F3F] p-4 text-sm text-white/70">
-              <p className="text-white/50">System status</p>
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+              <p className="text-slate-500">System status</p>
               <div className="mt-2 flex items-center gap-3 text-sm font-medium text-green-400">
                 <CheckCircle className="h-5 w-5" />
                 Operational
               </div>
-              <p className="mt-3 text-xs text-white/40">Last sync: {new Date().toLocaleTimeString()}</p>
+              <p className="mt-3 text-xs text-slate-400">Last sync: {new Date().toLocaleTimeString()}</p>
             </div>
           </div>
 
 
-                <Card className="border-white/5 bg-[#0B152F]">
+                <Card className="border-slate-200 bg-white">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Users className="h-5 w-5 text-teal-400" />
+                      <Users className="h-5 w-5 text-[#2563eb]" />
                       Recent Users
                     </CardTitle>
-                    <CardDescription className="text-white/50">Latest registered users</CardDescription>
+                    <CardDescription className="text-slate-500">Latest registered users</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-3 max-h-[400px] overflow-y-auto">
                     {users.slice(0, 5).length === 0 ? (
-                      <p className="text-center text-white/50">No users yet</p>
+                      <p className="text-center text-slate-500">No users yet</p>
                     ) : (
                       users.slice(0, 5).map((user) => (
                         <div
                           key={user.id}
-                          className="cursor-pointer rounded-xl border border-white/10 p-4 transition hover:border-teal-500"
+                          className="cursor-pointer rounded-xl border border-slate-200 p-4 transition hover:border-[#2563eb]"
                           onClick={() => setActiveView('users')}
                         >
                           <div className="flex items-center justify-between">
                             <div>
-                              <p className="font-semibold text-white">{user.email}</p>
-                              <p className="text-xs text-white/50">{user.full_name || 'No name'}</p>
+                              <p className="font-semibold text-slate-900">{user.email}</p>
+                              <p className="text-xs text-slate-500">{user.full_name || 'No name'}</p>
                             </div>
                             <span
                               className={`rounded-full px-3 py-1 text-xs ${
-                                user.role === 'admin' ? 'bg-teal-500/20 text-teal-400' : 'bg-white/10 text-white/60'
+                                user.role === 'admin' ? 'bg-[#2563eb]/20 text-[#2563eb]' : 'bg-white/10 text-slate-500'
                               }`}
                             >
                               {user.role}
@@ -680,8 +725,8 @@ const AdminDashboard = () => {
           {activeView === 'settings' && (
             <div className="space-y-6">
               <div>
-                <h1 className="text-2xl font-semibold text-white">Settings</h1>
-                <p className="mt-1 text-white/60">Mining is controlled per user in the User Directory. Use the Mining column to enable or disable mining for each user.</p>
+                <h1 className="text-2xl font-semibold text-slate-900">Settings</h1>
+                <p className="mt-1 text-slate-500">Mining is controlled per user in the User Directory. Use the Mining column to enable or disable mining for each user.</p>
               </div>
             </div>
           )}
@@ -690,15 +735,15 @@ const AdminDashboard = () => {
           {activeView === 'deposit-addresses' && (
             <div className="space-y-6">
               <div>
-                <h1 className="text-2xl font-semibold text-white">Deposit addresses</h1>
-                <p className="mt-1 text-white/60">
+                <h1 className="text-2xl font-semibold text-slate-900">Deposit addresses</h1>
+                <p className="mt-1 text-slate-500">
                   Update wallet addresses for each payment method. Saving generates a QR code for that address; users see the same address and a scannable QR on the Deposit and Start Mining payment steps.
                 </p>
               </div>
               {depositAddressRows.length === 0 ? (
-                <Card className="border-white/5 bg-[#0B152F]">
-                  <CardContent className="py-10 text-center text-white/50">
-                    No deposit address rows found. Run your database schema seed for <code className="text-teal-400/80">deposit_addresses</code>.
+                <Card className="border-slate-200 bg-white">
+                  <CardContent className="py-10 text-center text-slate-500">
+                    No deposit address rows found. Run your database schema seed for <code className="text-[#2563eb]/80">deposit_addresses</code>.
                   </CardContent>
                 </Card>
               ) : (
@@ -708,10 +753,10 @@ const AdminDashboard = () => {
                     const previewQr = depositAddressQrUrl(draft);
                     const label = GATEWAY_LABELS[row.gateway] || row.gateway;
                     return (
-                      <Card key={row.id} className="border-white/5 bg-[#0B152F]">
+                      <Card key={row.id} className="border-slate-200 bg-white">
                         <CardHeader className="pb-2">
-                          <CardTitle className="text-lg text-white">{label}</CardTitle>
-                          <CardDescription className="text-white/50 font-mono text-xs">{row.gateway}</CardDescription>
+                          <CardTitle className="text-lg text-slate-900">{label}</CardTitle>
+                          <CardDescription className="text-slate-500 font-mono text-xs">{row.gateway}</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                           <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
@@ -720,29 +765,29 @@ const AdminDashboard = () => {
                                 <img
                                   src={previewQr}
                                   alt={`QR for ${label}`}
-                                  className="h-36 w-36 rounded-lg border border-white/10 bg-white p-2 object-contain"
+                                  className="h-36 w-36 rounded-lg border border-slate-200 bg-white p-2 object-contain"
                                 />
-                                <p className="mt-1 text-center text-[10px] text-white/40">Preview</p>
+                                <p className="mt-1 text-center text-[10px] text-slate-400">Preview</p>
                               </div>
                             ) : (
-                              <div className="flex h-36 w-36 shrink-0 items-center justify-center rounded-lg border border-dashed border-white/20 bg-white/5 text-xs text-white/40 mx-auto sm:mx-0">
+                              <div className="flex h-36 w-36 shrink-0 items-center justify-center rounded-lg border border-dashed border-white/20 bg-white/5 text-xs text-slate-400 mx-auto sm:mx-0">
                                 Enter address
                               </div>
                             )}
                             <div className="min-w-0 flex-1 space-y-3">
                               <div className="grid gap-2">
-                                <Label className="text-white/80">Wallet address</Label>
+                                <Label className="text-slate-700">Wallet address</Label>
                                 <Input
                                   value={draft}
                                   onChange={(e) =>
                                     setDepositAddressDrafts((prev) => ({ ...prev, [row.id]: e.target.value }))
                                   }
-                                  className="font-mono text-sm bg-[#0F1F3F] border-white/10 text-white"
+                                  className="font-mono text-sm bg-slate-50 border-slate-200 text-slate-900"
                                   placeholder="Paste receive address"
                                 />
                               </div>
-                              <div className="flex items-center justify-between gap-4 rounded-lg border border-white/10 bg-[#0F1F3F]/50 px-3 py-2">
-                                <Label htmlFor={`active-${row.id}`} className="text-white/80 cursor-pointer">
+                              <div className="flex items-center justify-between gap-4 rounded-lg border border-slate-200 bg-slate-50/50 px-3 py-2">
+                                <Label htmlFor={`active-${row.id}`} className="text-slate-700 cursor-pointer">
                                   Active (shown to users)
                                 </Label>
                                 <Switch
@@ -754,7 +799,7 @@ const AdminDashboard = () => {
                                 />
                               </div>
                               <Button
-                                className="w-full bg-teal-500 text-black hover:bg-teal-400 sm:w-auto"
+                                className="w-full bg-[#2563eb] text-white hover:bg-[#1d4ed8] sm:w-auto"
                                 disabled={savingDepositId === row.id}
                                 onClick={() => handleSaveDepositAddress(row)}
                               >
@@ -776,15 +821,15 @@ const AdminDashboard = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-2xl font-semibold text-white">Support Tickets</h1>
-                  <p className="mt-1 text-white/60">Manage and respond to user support requests</p>
+                  <h1 className="text-2xl font-semibold text-slate-900">Support Tickets</h1>
+                  <p className="mt-1 text-slate-500">Manage and respond to user support requests</p>
                 </div>
               </div>
 
-              <div className="rounded-lg border border-white/5 bg-[#0B152F] overflow-hidden">
+              <div className="rounded-lg border border-slate-200 bg-white overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-sm">
-                    <thead className="bg-[#0F1F3F] text-white/70">
+                    <thead className="bg-slate-50 text-slate-600">
                       <tr>
                         <th className="py-4 px-6">User</th>
                         <th className="py-4 px-6">Subject</th>
@@ -797,25 +842,25 @@ const AdminDashboard = () => {
                     <tbody className="divide-y divide-white/5">
                       {allTickets.length === 0 ? (
                         <tr>
-                          <td colSpan={6} className="py-12 text-center text-white/50">
+                          <td colSpan={6} className="py-12 text-center text-slate-500">
                             No support tickets found
                           </td>
                         </tr>
                       ) : (
                         allTickets.map((ticket) => (
-                          <tr key={ticket.id} className="text-white/80 hover:bg-white/5 transition-colors">
+                          <tr key={ticket.id} className="text-slate-700 hover:bg-white/5 transition-colors">
                             <td className="py-4 px-6">
-                              <div className="font-medium text-white">{ticket.name}</div>
-                              <div className="text-xs text-white/40">{ticket.email}</div>
+                              <div className="font-medium text-slate-900">{ticket.name}</div>
+                              <div className="text-xs text-slate-400">{ticket.email}</div>
                             </td>
                             <td className="py-4 px-6">
-                              <div className="font-medium text-white">{ticket.subject}</div>
+                              <div className="font-medium text-slate-900">{ticket.subject}</div>
                             </td>
                             <td className="py-4 px-6">
                               <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                                 ticket.status === 'open' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
                                 ticket.status === 'in_progress' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
-                                ticket.status === 'resolved' ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30' :
+                                ticket.status === 'resolved' ? 'bg-[#2563eb]/20 text-[#2563eb] border border-[#2563eb]/30' :
                                 'bg-red-500/20 text-red-400 border border-red-500/30'
                               }`}>
                                 {ticket.status.replace('_', ' ')}
@@ -825,21 +870,21 @@ const AdminDashboard = () => {
                               <span className={`flex items-center gap-1.5 ${
                                 ticket.priority === 'urgent' ? 'text-red-400' :
                                 ticket.priority === 'high' ? 'text-orange-400' :
-                                ticket.priority === 'medium' ? 'text-teal-400' :
+                                ticket.priority === 'medium' ? 'text-[#2563eb]' :
                                 'text-green-400'
                               }`}>
                                 <AlertCircle className="h-3 w-3" />
                                 <span className="capitalize">{ticket.priority}</span>
                               </span>
                             </td>
-                            <td className="py-4 px-6 text-white/60">
+                            <td className="py-4 px-6 text-slate-500">
                               {new Date(ticket.created_at).toLocaleDateString()}
                             </td>
                             <td className="py-4 px-6">
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="text-teal-400 hover:text-teal-300 hover:bg-teal-500/10"
+                                className="text-[#2563eb] hover:text-[#1d4ed8] hover:bg-[#2563eb]/10"
                                 onClick={() => {
                                   setSelectedTicket(ticket);
                                   setAdminResponse(ticket.admin_response || '');
@@ -860,30 +905,30 @@ const AdminDashboard = () => {
 
           {/* Users View */}
           {activeView === 'users' && (
-            <Card className="border-white/5 bg-[#0B152F]">
+            <Card className="border-slate-200 bg-white">
               <CardHeader className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <CardTitle className="text-white">User Directory</CardTitle>
-                  <CardDescription className="text-white/50">Full list of all registered users and roles</CardDescription>
+                  <CardTitle className="text-slate-900">User Directory</CardTitle>
+                  <CardDescription className="text-slate-500">Full list of all registered users and roles</CardDescription>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                     <Input
                       placeholder="Search by email or name..."
                       value={userSearchQuery}
                       onChange={(e) => setUserSearchQuery(e.target.value)}
-                      className="pl-9 w-full sm:w-56 bg-[#0F1F3F] border-white/10 text-white placeholder:text-white/40"
+                      className="pl-9 w-full sm:w-56 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400"
                     />
                   </div>
-                  <Button variant="outline" className="border-white/10 text-white hover:bg-white/10">
+                  <Button variant="outline" className="border-slate-200 text-slate-700 hover:bg-slate-100">
                     Export CSV
                   </Button>
                 </div>
               </CardHeader>
               <CardContent className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
-                  <thead className="text-white/60">
+                  <thead className="text-slate-500">
                     <tr>
                       <th className="pb-3">Email</th>
                       <th>Name</th>
@@ -897,13 +942,13 @@ const AdminDashboard = () => {
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {filteredUsers.map((user) => (
-                      <tr key={user.id} className="text-white/70">
+                      <tr key={user.id} className="text-slate-600">
                         <td className="py-3">{user.email}</td>
                         <td>{user.full_name || 'N/A'}</td>
                         <td>
                           <span
                             className={`rounded-full px-3 py-1 text-xs ${
-                              user.role === 'admin' ? 'bg-teal-500/20 text-teal-400' : 'bg-white/10 text-white/60'
+                              user.role === 'admin' ? 'bg-[#2563eb]/20 text-[#2563eb]' : 'bg-white/10 text-slate-500'
                             }`}
                           >
                             {user.role}
@@ -936,7 +981,7 @@ const AdminDashboard = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="text-teal-400 hover:text-teal-300 hover:bg-teal-500/10 mr-1"
+                            className="text-[#2563eb] hover:text-[#1d4ed8] hover:bg-[#2563eb]/10 mr-1"
                             onClick={() => handleOpenBalanceEdit(user)}
                           >
                             <Pencil className="h-4 w-4 mr-1 inline" />
@@ -957,7 +1002,7 @@ const AdminDashboard = () => {
                   </tbody>
                 </table>
                 {filteredUsers.length === 0 && (
-                  <p className="text-center text-white/50 py-6">
+                  <p className="text-center text-slate-500 py-6">
                     {userSearchQuery.trim() ? 'No users match your search.' : 'No users yet.'}
                   </p>
                 )}
@@ -967,16 +1012,16 @@ const AdminDashboard = () => {
 
           {/* Edit Balance Dialog */}
           <Dialog open={!!balanceEditUser} onOpenChange={(open) => !open && setBalanceEditUser(null)}>
-            <DialogContent className="border-white/10 bg-[#0B152F] text-white">
+            <DialogContent className="border-slate-200 bg-white text-slate-800">
               <DialogHeader>
                 <DialogTitle>Edit user balance</DialogTitle>
-                <DialogDescription className="text-white/60">
+                <DialogDescription className="text-slate-500">
                   {balanceEditUser?.email}. Changes apply to mining balance. A credit will appear in the user&apos;s Deposit Log and may create referral bonus for their referrer.
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="balance-edit" className="text-white/80">New balance (USD)</Label>
+                  <Label htmlFor="balance-edit" className="text-slate-700">New balance (USD)</Label>
                   <Input
                     id="balance-edit"
                     type="number"
@@ -984,15 +1029,15 @@ const AdminDashboard = () => {
                     step="0.01"
                     value={balanceEditValue}
                     onChange={(e) => setBalanceEditValue(e.target.value)}
-                    className="bg-[#0F1F3F] border-white/10 text-white"
+                    className="bg-slate-50 border-slate-200 text-slate-900"
                   />
                 </div>
               </div>
               <DialogFooter className="gap-2 sm:gap-0">
-                <Button variant="outline" className="border-white/10 text-white" onClick={() => setBalanceEditUser(null)} disabled={balanceEditSaving}>
+                <Button variant="outline" className="border-slate-200 text-white" onClick={() => setBalanceEditUser(null)} disabled={balanceEditSaving}>
                   Cancel
                 </Button>
-                <Button className="bg-teal-500 text-black hover:bg-teal-400" onClick={handleSaveBalance} disabled={balanceEditSaving}>
+                <Button className="bg-[#2563eb] text-white hover:bg-[#1d4ed8]" onClick={handleSaveBalance} disabled={balanceEditSaving}>
                   {balanceEditSaving ? 'Saving...' : 'Save'}
                 </Button>
               </DialogFooter>
@@ -1001,16 +1046,16 @@ const AdminDashboard = () => {
 
           {/* Edit Referral Balance Dialog */}
           <Dialog open={!!referralEditUser} onOpenChange={(open) => !open && setReferralEditUser(null)}>
-            <DialogContent className="border-white/10 bg-[#0B152F] text-white">
+            <DialogContent className="border-slate-200 bg-white text-slate-800">
               <DialogHeader>
                 <DialogTitle>Edit referral balance</DialogTitle>
-                <DialogDescription className="text-white/60">
+                <DialogDescription className="text-slate-500">
                   {referralEditUser?.email}. Set the referral earnings balance for this user (as referrer). This is separate from mining balance.
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="referral-edit" className="text-white/80">Referral balance (USD)</Label>
+                  <Label htmlFor="referral-edit" className="text-slate-700">Referral balance (USD)</Label>
                   <Input
                     id="referral-edit"
                     type="number"
@@ -1018,12 +1063,12 @@ const AdminDashboard = () => {
                     step="0.01"
                     value={referralEditValue}
                     onChange={(e) => setReferralEditValue(e.target.value)}
-                    className="bg-[#0F1F3F] border-white/10 text-white"
+                    className="bg-slate-50 border-slate-200 text-slate-900"
                   />
                 </div>
               </div>
               <DialogFooter className="gap-2 sm:gap-0">
-                <Button variant="outline" className="border-white/10 text-white" onClick={() => setReferralEditUser(null)} disabled={referralEditSaving}>
+                <Button variant="outline" className="border-slate-200 text-white" onClick={() => setReferralEditUser(null)} disabled={referralEditSaving}>
                   Cancel
                 </Button>
                 <Button className="bg-green-600 text-white hover:bg-green-500" onClick={handleSaveReferralBalance} disabled={referralEditSaving}>
@@ -1037,47 +1082,47 @@ const AdminDashboard = () => {
           {/* Analytics View */}
           {activeView === 'analytics' && (
             <div className="space-y-6">
-          <Card className="border-white/5 bg-[#0B152F]">
+          <Card className="border-slate-200 bg-white">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5 text-teal-400" />
+                    <BarChart3 className="h-5 w-5 text-[#2563eb]" />
                     Platform Analytics
                   </CardTitle>
-                  <CardDescription className="text-white/50">Comprehensive platform statistics and insights</CardDescription>
+                  <CardDescription className="text-slate-500">Comprehensive platform statistics and insights</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="rounded-xl bg-[#0F1F3F] p-4">
-                      <p className="text-white/50 text-sm">Total Users</p>
-                      <p className="text-3xl font-semibold text-teal-400 mt-2">{users.length}</p>
-                      <p className="text-xs text-white/40 mt-1">
+                    <div className="rounded-xl bg-slate-50 p-4">
+                      <p className="text-slate-500 text-sm">Total Users</p>
+                      <p className="text-3xl font-semibold text-[#2563eb] mt-2">{users.length}</p>
+                      <p className="text-xs text-slate-400 mt-1">
                         {users.filter((u) => u.role === 'admin').length} admins
                       </p>
                     </div>
-                    <div className="rounded-xl bg-[#0F1F3F] p-4">
-                      <p className="text-white/50 text-sm">Total Mined</p>
-                      <p className="text-3xl font-semibold text-teal-400 mt-2">
+                    <div className="rounded-xl bg-slate-50 p-4">
+                      <p className="text-slate-500 text-sm">Total Mined</p>
+                      <p className="text-3xl font-semibold text-[#2563eb] mt-2">
                         {allStats.reduce((sum, stat) => sum + stat.total_mined, 0).toFixed(2)}
                       </p>
-                      <p className="text-xs text-white/40 mt-1">BTC</p>
+                      <p className="text-xs text-slate-400 mt-1">BTC</p>
                     </div>
-                    <div className="rounded-xl bg-[#0F1F3F] p-4">
-                      <p className="text-white/50 text-sm">Hash Power</p>
-                      <p className="text-3xl font-semibold text-teal-400 mt-2">
+                    <div className="rounded-xl bg-slate-50 p-4">
+                      <p className="text-slate-500 text-sm">Hash Power</p>
+                      <p className="text-3xl font-semibold text-[#2563eb] mt-2">
                         {allStats.reduce((sum, stat) => sum + stat.hash_rate, 0).toFixed(2)}
                       </p>
-                      <p className="text-xs text-white/40 mt-1">TH/s</p>
+                      <p className="text-xs text-slate-400 mt-1">TH/s</p>
                     </div>
                   </div>
 
                   <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    <div className="rounded-xl bg-[#0F1F3F] p-4">
-                      <p className="text-white/50 text-sm mb-4">User Activity</p>
+                    <div className="rounded-xl bg-slate-50 p-4">
+                      <p className="text-slate-500 text-sm mb-4">User Activity</p>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-white/70 text-sm">New Users (Last 7 days)</span>
-                          <span className="text-teal-400 font-semibold">
+                          <span className="text-slate-600 text-sm">New Users (Last 7 days)</span>
+                          <span className="text-[#2563eb] font-semibold">
                             {users.filter((u) => {
                               const weekAgo = new Date();
                               weekAgo.setDate(weekAgo.getDate() - 7);
@@ -1086,14 +1131,14 @@ const AdminDashboard = () => {
                           </span>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-white/70 text-sm">Active Miners</span>
-                          <span className="text-teal-400 font-semibold">
+                          <span className="text-slate-600 text-sm">Active Miners</span>
+                          <span className="text-[#2563eb] font-semibold">
                             {allStats.filter((s) => s.total_mined > 0).length}
                           </span>
               </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-white/70 text-sm">Average Daily Earnings</span>
-                          <span className="text-teal-400 font-semibold">
+                          <span className="text-slate-600 text-sm">Average Daily Earnings</span>
+                          <span className="text-[#2563eb] font-semibold">
                             {allStats.length > 0
                               ? (allStats.reduce((sum, s) => sum + s.daily_earnings, 0) / allStats.length).toFixed(4)
                               : '0.0000'}{' '}
@@ -1111,10 +1156,10 @@ const AdminDashboard = () => {
       </main>
       {/* Ticket Management Dialog */}
       <Dialog open={!!selectedTicket} onOpenChange={(open) => !open && setSelectedTicket(null)}>
-        <DialogContent className="max-w-2xl bg-[#0B152F] border-white/10 text-white">
+        <DialogContent className="max-w-2xl bg-white border-slate-200 text-slate-800">
           <DialogHeader>
             <DialogTitle>Handle Support Ticket</DialogTitle>
-            <DialogDescription className="text-white/60">
+            <DialogDescription className="text-slate-500">
               Provide a response and update the ticket status.
             </DialogDescription>
           </DialogHeader>
@@ -1123,19 +1168,19 @@ const AdminDashboard = () => {
             <div className="space-y-6 mt-4">
               <div className="grid grid-cols-2 gap-4 rounded-xl bg-white/5 p-4">
                 <div>
-                  <p className="text-xs text-white/40 uppercase font-bold tracking-wider">User</p>
+                  <p className="text-xs text-slate-400 uppercase font-bold tracking-wider">User</p>
                   <p className="font-medium">{selectedTicket.name}</p>
-                  <p className="text-sm text-white/50">{selectedTicket.email}</p>
+                  <p className="text-sm text-slate-500">{selectedTicket.email}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-white/40 uppercase font-bold tracking-wider">Subject</p>
+                  <p className="text-xs text-slate-400 uppercase font-bold tracking-wider">Subject</p>
                   <p className="font-medium">{selectedTicket.subject}</p>
                 </div>
               </div>
               
               <div className="space-y-2">
-                <p className="text-xs text-white/40 uppercase font-bold tracking-wider">Message</p>
-                <div className="rounded-xl bg-white/5 p-4 text-sm text-white/80 max-h-[150px] overflow-y-auto">
+                <p className="text-xs text-slate-400 uppercase font-bold tracking-wider">Message</p>
+                <div className="rounded-xl bg-white/5 p-4 text-sm text-slate-700 max-h-[150px] overflow-y-auto">
                   {selectedTicket.message}
                 </div>
               </div>
@@ -1146,7 +1191,7 @@ const AdminDashboard = () => {
                   <select
                     value={selectedTicket.status}
                     onChange={(e) => setSelectedTicket({ ...selectedTicket, status: e.target.value })}
-                    className="w-full bg-[#0F1F3F] text-white border border-white/10 rounded-md px-3 py-2 outline-none focus:ring-1 focus:ring-teal-500"
+                    className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-md px-3 py-2 outline-none focus:ring-1 focus:ring-[#2563eb]"
                   >
                     <option value="open">Open</option>
                     <option value="in_progress">In Progress</option>
@@ -1156,10 +1201,10 @@ const AdminDashboard = () => {
                 </div>
                 <div className="space-y-2">
                   <Label>Priority</Label>
-                  <div className={`px-3 py-2 rounded-md border border-white/10 bg-white/5 capitalize ${
+                  <div className={`px-3 py-2 rounded-md border border-slate-200 bg-white/5 capitalize ${
                     selectedTicket.priority === 'urgent' ? 'text-red-400' :
                     selectedTicket.priority === 'high' ? 'text-orange-400' :
-                    selectedTicket.priority === 'medium' ? 'text-teal-400' :
+                    selectedTicket.priority === 'medium' ? 'text-[#2563eb]' :
                     'text-green-400'
                   }`}>
                     {selectedTicket.priority}
@@ -1172,7 +1217,7 @@ const AdminDashboard = () => {
                 <Textarea
                   value={adminResponse}
                   onChange={(e) => setAdminResponse(e.target.value)}
-                  className="bg-[#0F1F3F] text-white border-white/10 min-h-[120px]"
+                  className="bg-slate-50 text-slate-900 border-slate-200 min-h-[120px]"
                   placeholder="Type your response here..."
                 />
               </div>
@@ -1180,13 +1225,13 @@ const AdminDashboard = () => {
           )}
           
           <DialogFooter className="mt-6">
-            <Button variant="ghost" onClick={() => setSelectedTicket(null)} className="text-white hover:bg-white/5">
+            <Button variant="ghost" onClick={() => setSelectedTicket(null)} className="text-slate-700 hover:bg-slate-100">
               Cancel
             </Button>
             <Button 
               onClick={handleUpdateTicketStatus} 
               disabled={updatingTicket || !adminResponse}
-              className="bg-teal-500 text-black hover:bg-teal-400"
+              className="bg-[#2563eb] text-white hover:bg-[#1d4ed8]"
             >
               {updatingTicket ? 'Updating...' : 'Save & Update'}
             </Button>

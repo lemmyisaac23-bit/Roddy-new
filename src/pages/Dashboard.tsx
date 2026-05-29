@@ -362,16 +362,16 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#040a0f] text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-800">
       {/* Top Navigation Bar */}
-      <header className="bg-[#060d13] border-b border-white/5 px-6 py-4">
+      <header className="bg-white border-b border-slate-200 px-6 py-4 shadow-sm">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-teal-500 rounded-full flex items-center justify-center">
-              <span className="text-black font-bold text-lg">B</span>
+            <div className="w-8 h-8 bg-[#22c55e] rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">GH</span>
             </div>
-            <span className="text-xl font-bold text-white">Grillhashpowermine</span>
+            <span className="text-xl font-bold text-slate-900">Grillhashpowermine</span>
           </div>
           
           {/* Center Navigation */}
@@ -382,7 +382,7 @@ const Dashboard = () => {
                 navigate('/dashboard');
               }}
               className={`text-sm font-medium transition-colors ${
-                activeView === 'dashboard' ? 'text-teal-400' : 'text-white/70 hover:text-white'
+                activeView === 'dashboard' ? 'text-[#2563eb]' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Home
@@ -390,7 +390,7 @@ const Dashboard = () => {
             <button
               onClick={() => setActiveView('team')}
               className={`text-sm font-medium transition-colors ${
-                activeView === 'team' ? 'text-teal-400' : 'text-white/70 hover:text-white'
+                activeView === 'team' ? 'text-[#2563eb]' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Team
@@ -398,7 +398,7 @@ const Dashboard = () => {
             <button
               onClick={() => setActiveView('about-us')}
               className={`text-sm font-medium transition-colors ${
-                activeView === 'about-us' ? 'text-teal-400' : 'text-white/70 hover:text-white'
+                activeView === 'about-us' ? 'text-[#2563eb]' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               AboutUs
@@ -409,7 +409,7 @@ const Dashboard = () => {
           <div className="flex items-center gap-2 lg:gap-4">
             {/* Mobile Menu Button */}
             <select
-              className="hidden sm:block rounded-md bg-transparent px-3 py-2 text-sm text-white outline-none ring-1 ring-white/10"
+              className="hidden sm:block rounded-md bg-slate-50 px-3 py-2 text-sm text-slate-800 outline-none ring-1 ring-slate-200"
               value={language}
               onChange={(e) => {
                 const newLang = e.target.value as LanguageKey;
@@ -451,25 +451,25 @@ const Dashboard = () => {
           {activeView === 'my-referrals' && (
             <div className="space-y-6">
               {/* My Commission Section */}
-              <div className="flex items-center justify-between rounded-lg border border-white/5 bg-[#060d13]/70 p-4">
+              <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-white/70 p-4">
                 <div className="flex items-center gap-4">
-                  <span className="text-white/70">USDT</span>
-                  <span className="text-white text-lg font-semibold">{commission.toFixed(4)}</span>
+                  <span className="text-slate-600">USDT</span>
+                  <span className="text-slate-900 text-lg font-semibold">{commission.toFixed(4)}</span>
                 </div>
-                <Button className="bg-teal-500 text-black hover:bg-teal-400">
+                <Button className="bg-[#2563eb] text-white hover:bg-[#1d4ed8]">
                   Withdrawal
                 </Button>
               </div>
 
               {/* USDT Wallet Address Section */}
               <div className="space-y-2">
-                <Label className="text-white/70">USDT Wallet Address (Require TRC20)</Label>
+                <Label className="text-slate-600">USDT Wallet Address (Require TRC20)</Label>
                 <div className="flex gap-2">
                   <Input
                     value={walletAddress}
                     onChange={(e) => setWalletAddress(e.target.value)}
                     disabled={!isEditingWallet}
-                    className="bg-[#040a0f] text-white border-white/10"
+                    className="bg-slate-50 text-slate-900 border-slate-200"
                     placeholder="Enter your USDT wallet address"
                   />
                   <Button
@@ -485,7 +485,7 @@ const Dashboard = () => {
                         setIsEditingWallet(true);
                       }
                     }}
-                    className="bg-teal-500 text-black hover:bg-teal-400"
+                    className="bg-[#2563eb] text-white hover:bg-[#1d4ed8]"
                   >
                     {isEditingWallet ? 'Save' : 'Edit'}
                   </Button>
@@ -494,12 +494,12 @@ const Dashboard = () => {
 
               {/* Your Referral Link Section */}
               <div className="space-y-2">
-                <Label className="text-white/70">Your Referral Link</Label>
+                <Label className="text-slate-600">Your Referral Link</Label>
                 <div className="flex gap-2">
                   <Input
                     value={referralLink}
                     readOnly
-                    className="bg-[#040a0f] text-white border-white/10"
+                    className="bg-slate-50 text-slate-900 border-slate-200"
                   />
                   <Button
                     onClick={() => {
@@ -509,7 +509,7 @@ const Dashboard = () => {
                         description: 'Referral link copied to clipboard',
                       });
                     }}
-                    className="bg-teal-500 text-black hover:bg-teal-400"
+                    className="bg-[#2563eb] text-white hover:bg-[#1d4ed8]"
                   >
                     <Copy className="h-4 w-4 mr-2" />
                     Copy
@@ -518,11 +518,11 @@ const Dashboard = () => {
               </div>
 
               {/* Referral Program Description */}
-              <div className="rounded-lg border border-white/5 bg-[#060d13]/70 p-6 space-y-4">
-                <h3 className="text-xl font-semibold text-white">
+              <div className="rounded-lg border border-slate-200 bg-white/70 p-6 space-y-4">
+                <h3 className="text-xl font-semibold text-slate-900">
                   Earn USDT by referring new users, join our Affiliate Program (Partner Program), and earn a lifetime 10% commission!
                 </h3>
-                <ol className="list-decimal list-inside space-y-2 text-white/80 text-sm">
+                <ol className="list-decimal list-inside space-y-2 text-slate-700 text-sm">
                   <li>Put your affiliate link on your blog or any website you may have.</li>
                   <li>
                     New users register with us. You will get 10% of the top-up amount. For example, You recommend user A, you can get 7% of the referral plan, A recommends B to buy plan, you can get 2% B recommends C to buy plan, you can get 1%
@@ -537,13 +537,13 @@ const Dashboard = () => {
               </div>
 
               {/* Your Team Section */}
-              <div className="rounded-lg border border-white/5 bg-[#060d13]/70 p-6">
-                <h3 className="text-xl font-semibold text-white mb-4">
+              <div className="rounded-lg border border-slate-200 bg-white/70 p-6">
+                <h3 className="text-xl font-semibold text-slate-900 mb-4">
                   Your Team invited {teamMembers.length} users
                 </h3>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-sm">
-                    <thead className="bg-[#040a0f] text-white/70">
+                    <thead className="bg-slate-100 text-slate-600">
                       <tr>
                         <th className="py-3 px-4">User</th>
                         <th className="py-3 px-4">Recharge Amount</th>
@@ -551,16 +551,16 @@ const Dashboard = () => {
                         <th className="py-3 px-4">Amount</th>
                       </tr>
                     </thead>
-                    <tbody className="text-white/80">
+                    <tbody className="text-slate-700">
                       {teamMembers.length === 0 ? (
                         <tr>
-                          <td colSpan={4} className="py-8 text-center text-white/50">
+                          <td colSpan={4} className="py-8 text-center text-slate-500">
                             No team members yet
                           </td>
                         </tr>
                       ) : (
                         teamMembers.map((member, index) => (
-                          <tr key={index} className="border-t border-white/5">
+                          <tr key={index} className="border-t border-slate-200">
                             <td className="py-3 px-4">{member.user}</td>
                             <td className="py-3 px-4">{member.recharge_amount}</td>
                             <td className="py-3 px-4">{member.percent}%</td>
@@ -577,11 +577,11 @@ const Dashboard = () => {
 
           {/* Referral Bonus Logs Page */}
           {activeView === 'referral-bonus-logs' && (
-            <div className="rounded-lg border border-white/5 bg-[#060d13]/70 p-6">
-              <h3 className="text-xl font-semibold text-white mb-4">Referral Bonus Logs</h3>
+            <div className="rounded-lg border border-slate-200 bg-white/70 p-6">
+              <h3 className="text-xl font-semibold text-slate-900 mb-4">Referral Bonus Logs</h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
-                  <thead className="bg-[#040a0f] text-white">
+                  <thead className="bg-slate-100 text-slate-700">
                     <tr>
                       <th className="py-3 px-4">User</th>
                       <th className="py-3 px-4">Recharge amount</th>
@@ -589,7 +589,7 @@ const Dashboard = () => {
                       <th className="py-3 px-4">Time</th>
                     </tr>
                   </thead>
-                  <tbody className="text-white/80">
+                  <tbody className="text-slate-700">
                     {referralBonusLogs.length === 0 ? (
                       <tr>
                         <td colSpan={4} className="py-8 text-center text-white">
@@ -598,7 +598,7 @@ const Dashboard = () => {
                       </tr>
                     ) : (
                       referralBonusLogs.map((log, index) => (
-                        <tr key={index} className="border-t border-white/5">
+                        <tr key={index} className="border-t border-slate-200">
                           <td className="py-3 px-4">{log.user}</td>
                           <td className="py-3 px-4">{log.recharge_amount}</td>
                           <td className="py-3 px-4">{log.amount}</td>
@@ -614,11 +614,11 @@ const Dashboard = () => {
 
           {/* Withdraw Logs Page */}
           {activeView === 'withdraw-logs' && (
-            <div className="rounded-lg border border-white/5 bg-[#060d13]/70 p-6">
-              <h3 className="text-xl font-semibold text-white mb-4">Withdraw Logs</h3>
+            <div className="rounded-lg border border-slate-200 bg-white/70 p-6">
+              <h3 className="text-xl font-semibold text-slate-900 mb-4">Withdraw Logs</h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
-                  <thead className="bg-[#040a0f] text-white">
+                  <thead className="bg-slate-100 text-slate-700">
                     <tr>
                       <th className="py-3 px-4">Time</th>
                       <th className="py-3 px-4">Transaction ID</th>
@@ -630,7 +630,7 @@ const Dashboard = () => {
                       <th className="py-3 px-4">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="text-white/80">
+                  <tbody className="text-slate-700">
                     {withdrawLogs.length === 0 ? (
                       <tr>
                         <td colSpan={8} className="py-8 text-center text-white">
@@ -639,7 +639,7 @@ const Dashboard = () => {
                       </tr>
                     ) : (
                       withdrawLogs.map((log, index) => (
-                        <tr key={index} className="border-t border-white/5">
+                        <tr key={index} className="border-t border-slate-200">
                           <td className="py-3 px-4">{log.time}</td>
                           <td className="py-3 px-4">{log.transaction_id}</td>
                           <td className="py-3 px-4">{log.wallet}</td>
@@ -649,14 +649,14 @@ const Dashboard = () => {
                           <td className="py-3 px-4">
                             <span className={`px-2 py-1 rounded text-xs ${
                               log.status === 'completed' ? 'bg-green-500/20 text-green-400' :
-                              log.status === 'pending' ? 'bg-teal-500/20 text-teal-400' :
+                              log.status === 'pending' ? 'bg-[#2563eb]/20 text-[#2563eb]' :
                               'bg-red-500/20 text-red-400'
                             }`}>
                               {log.status}
                             </span>
                           </td>
                           <td className="py-3 px-4">
-                            <button className="text-teal-400 hover:text-teal-300">View</button>
+                            <button className="text-[#2563eb] hover:text-[#1d4ed8]">View</button>
                           </td>
                         </tr>
                       ))
@@ -671,8 +671,8 @@ const Dashboard = () => {
           {activeView === 'support-new' && (
             <div className="space-y-6">
               <div className="flex items-center gap-3">
-                <LifeBuoy className="h-8 w-8 text-teal-400" />
-                <h2 className="text-3xl font-bold text-white">Open New Ticket</h2>
+                <LifeBuoy className="h-8 w-8 text-[#2563eb]" />
+                <h2 className="text-3xl font-bold text-slate-900">Open New Ticket</h2>
               </div>
               
               <form 
@@ -721,25 +721,25 @@ const Dashboard = () => {
                     setSubmittingTicket(false);
                   }
                 }}
-                className="rounded-lg border border-white/5 bg-[#060d13]/70 p-6 space-y-4"
+                className="rounded-lg border border-slate-200 bg-white/70 p-6 space-y-4"
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-white/70">Subject</Label>
+                    <Label className="text-slate-600">Subject</Label>
                     <Input
                       value={ticketSubject}
                       onChange={(e) => setTicketSubject(e.target.value)}
                       required
-                      className="bg-[#040a0f] text-white border-white/10"
+                      className="bg-slate-50 text-slate-900 border-slate-200"
                       placeholder="Enter ticket subject"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-white/70">Priority</Label>
+                    <Label className="text-slate-600">Priority</Label>
                     <select
                       value={ticketPriority}
                       onChange={(e) => setTicketPriority(e.target.value)}
-                      className="w-full bg-[#040a0f] text-white border border-white/10 rounded-md px-3 py-2 outline-none focus:ring-1 focus:ring-teal-500"
+                      className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-md px-3 py-2 outline-none focus:ring-1 focus:ring-[#2563eb]"
                     >
                       <option value="low">Low</option>
                       <option value="medium">Medium</option>
@@ -749,19 +749,19 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-white/70">Message</Label>
+                  <Label className="text-slate-600">Message</Label>
                   <Textarea
                     value={ticketMessage}
                     onChange={(e) => setTicketMessage(e.target.value)}
                     required
-                    className="bg-[#040a0f] text-white border-white/10 min-h-[200px]"
+                    className="bg-slate-50 text-slate-900 border-slate-200 min-h-[200px]"
                     placeholder="Describe your issue in detail..."
                   />
                 </div>
                 <Button
                   type="submit"
                   disabled={submittingTicket}
-                  className="w-full bg-teal-500 text-black hover:bg-teal-400 mt-6"
+                  className="w-full bg-[#2563eb] text-white hover:bg-[#1d4ed8] mt-6"
                 >
                   {submittingTicket ? 'Submitting...' : 'Submit Ticket'}
                 </Button>
@@ -774,22 +774,22 @@ const Dashboard = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <MessageSquare className="h-8 w-8 text-teal-400" />
-                  <h2 className="text-3xl font-bold text-white">Support Tickets</h2>
+                  <MessageSquare className="h-8 w-8 text-[#2563eb]" />
+                  <h2 className="text-3xl font-bold text-slate-900">Support Tickets</h2>
                 </div>
                 <Button 
                   onClick={() => setActiveView('support-new')}
-                  className="bg-teal-500 text-black hover:bg-teal-400"
+                  className="bg-[#2563eb] text-white hover:bg-[#1d4ed8]"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   New Ticket
                 </Button>
               </div>
 
-              <div className="rounded-lg border border-white/5 bg-[#060d13]/70 overflow-hidden">
+              <div className="rounded-lg border border-slate-200 bg-white/70 overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-sm">
-                    <thead className="bg-[#040a0f] text-white/70">
+                    <thead className="bg-slate-100 text-slate-600">
                       <tr>
                         <th className="py-4 px-6">Subject</th>
                         <th className="py-4 px-6">Status</th>
@@ -801,7 +801,7 @@ const Dashboard = () => {
                     <tbody className="divide-y divide-white/5">
                       {tickets.length === 0 ? (
                         <tr>
-                          <td colSpan={5} className="py-12 text-center text-white/50">
+                          <td colSpan={5} className="py-12 text-center text-slate-500">
                             <div className="flex flex-col items-center gap-2">
                               <Info className="h-8 w-8 opacity-20" />
                               <p>No support tickets found</p>
@@ -810,16 +810,16 @@ const Dashboard = () => {
                         </tr>
                       ) : (
                         tickets.map((ticket) => (
-                          <tr key={ticket.id} className="text-white/80 hover:bg-white/5 transition-colors">
+                          <tr key={ticket.id} className="text-slate-700 hover:bg-slate-50 transition-colors">
                             <td className="py-4 px-6">
-                              <div className="font-medium text-white">{ticket.subject}</div>
-                              <div className="text-xs text-white/40 mt-1">Ticket ID: #{ticket.id.slice(0, 8)}</div>
+                              <div className="font-medium text-slate-900">{ticket.subject}</div>
+                              <div className="text-xs text-slate-500 mt-1">Ticket ID: #{ticket.id.slice(0, 8)}</div>
                             </td>
                             <td className="py-4 px-6">
                               <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                                 ticket.status === 'open' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
                                 ticket.status === 'in_progress' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
-                                ticket.status === 'resolved' ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30' :
+                                ticket.status === 'resolved' ? 'bg-[#2563eb]/20 text-[#2563eb] border border-[#2563eb]/30' :
                                 'bg-red-500/20 text-red-400 border border-red-500/30'
                               }`}>
                                 {ticket.status.replace('_', ' ')}
@@ -829,7 +829,7 @@ const Dashboard = () => {
                               <span className={`flex items-center gap-1.5 ${
                                 ticket.priority === 'urgent' ? 'text-red-400' :
                                 ticket.priority === 'high' ? 'text-orange-400' :
-                                ticket.priority === 'medium' ? 'text-teal-400' :
+                                ticket.priority === 'medium' ? 'text-[#2563eb]' :
                                 'text-green-400'
                               }`}>
                                 <AlertCircle className="h-3 w-3" />
@@ -837,7 +837,7 @@ const Dashboard = () => {
                               </span>
                             </td>
                             <td className="py-4 px-6">
-                              <div className="flex items-center gap-2 text-white/60">
+                              <div className="flex items-center gap-2 text-slate-500">
                                 <Clock className="h-3 w-3" />
                                 {new Date(ticket.updated_at).toLocaleDateString()}
                               </div>
@@ -846,7 +846,7 @@ const Dashboard = () => {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="text-teal-400 hover:text-teal-300 hover:bg-teal-500/10"
+                                className="text-[#2563eb] hover:text-[#1d4ed8] hover:bg-[#2563eb]/10"
                                 onClick={() => {
                                   // Detailed view could be implemented later if needed
                                   toast({
@@ -873,7 +873,7 @@ const Dashboard = () => {
           {/* Profile Setting Page */}
           {activeView === 'profile' && (
             <div className="space-y-6">
-              <h2 className="text-3xl font-bold text-white">Profile Setting</h2>
+              <h2 className="text-3xl font-bold text-slate-900">Profile Setting</h2>
               <form 
                 onSubmit={async (e) => {
                   e.preventDefault();
@@ -911,60 +911,60 @@ const Dashboard = () => {
                     });
                   }
                 }}
-                className="rounded-lg border border-white/5 bg-[#060d13]/70 p-6 space-y-4"
+                className="rounded-lg border border-slate-200 bg-white/70 p-6 space-y-4"
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-white/70">
+                    <Label className="text-slate-600">
                       First Name <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       value={profileData.firstName}
                       onChange={(e) => setProfileData(prev => ({ ...prev, firstName: e.target.value }))}
                       required
-                      className="bg-[#040a0f] text-white border-white/10"
+                      className="bg-slate-50 text-slate-900 border-slate-200"
                       placeholder="First Name"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-white/70">
+                    <Label className="text-slate-600">
                       Last Name <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       value={profileData.lastName}
                       onChange={(e) => setProfileData(prev => ({ ...prev, lastName: e.target.value }))}
                       required
-                      className="bg-[#040a0f] text-white border-white/10"
+                      className="bg-slate-50 text-slate-900 border-slate-200"
                       placeholder="Last Name"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-white/70">Username</Label>
+                    <Label className="text-slate-600">Username</Label>
                     <Input
                       value={profileData.username}
                       onChange={(e) => setProfileData(prev => ({ ...prev, username: e.target.value }))}
-                      className="bg-[#040a0f] text-white border-white/10"
+                      className="bg-slate-50 text-slate-900 border-slate-200"
                       placeholder="Username"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-white/70">E-mail Address</Label>
+                    <Label className="text-slate-600">E-mail Address</Label>
                     <Input
                       type="email"
                       value={profileData.email}
                       readOnly
                       title="Email cannot be changed here"
-                      className="bg-[#040a0f]/60 text-white/70 border-white/10 cursor-not-allowed"
+                      className="bg-slate-100/60 text-slate-600 border-slate-200 cursor-not-allowed"
                       placeholder="Email"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-white/70">Mobile</Label>
+                    <Label className="text-slate-600">Mobile</Label>
                     <div className="flex gap-2">
                       <select
                         value={profileData.countryCode}
                         onChange={(e) => setProfileData(prev => ({ ...prev, countryCode: e.target.value }))}
-                        className="bg-teal-500 text-black px-3 py-2 rounded border-white/10"
+                        className="bg-[#2563eb] text-white px-3 py-2 rounded border-slate-200"
                       >
                         {dialCodeOptions.map((opt) => (
                           <option key={`${opt.iso2}-${opt.dial}`} value={opt.dial}>
@@ -975,60 +975,60 @@ const Dashboard = () => {
                       <Input
                         value={profileData.phone}
                         onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
-                        className="bg-[#040a0f] text-white border-white/10 flex-1"
+                        className="bg-slate-50 text-slate-900 border-slate-200 flex-1"
                         placeholder="Your Phone Number"
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-white/70">Country</Label>
+                    <Label className="text-slate-600">Country</Label>
                     <Input
                       value={profileData.country}
                       onChange={(e) => setProfileData(prev => ({ ...prev, country: e.target.value }))}
-                      className="bg-[#040a0f] text-white border-white/10"
+                      className="bg-slate-50 text-slate-900 border-slate-200"
                       placeholder="Country"
                     />
                   </div>
                   <div className="space-y-2 md:col-span-2">
-                    <Label className="text-white/70">Address</Label>
+                    <Label className="text-slate-600">Address</Label>
                     <Input
                       value={profileData.address}
                       onChange={(e) => setProfileData(prev => ({ ...prev, address: e.target.value }))}
-                      className="bg-[#040a0f] text-white border-white/10"
+                      className="bg-slate-50 text-slate-900 border-slate-200"
                       placeholder="Address"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-white/70">State</Label>
+                    <Label className="text-slate-600">State</Label>
                     <Input
                       value={profileData.state}
                       onChange={(e) => setProfileData(prev => ({ ...prev, state: e.target.value }))}
-                      className="bg-[#040a0f] text-white border-white/10"
+                      className="bg-slate-50 text-slate-900 border-slate-200"
                       placeholder="State"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-white/70">Zip Code</Label>
+                    <Label className="text-slate-600">Zip Code</Label>
                     <Input
                       value={profileData.zipCode}
                       onChange={(e) => setProfileData(prev => ({ ...prev, zipCode: e.target.value }))}
-                      className="bg-[#040a0f] text-white border-white/10"
+                      className="bg-slate-50 text-slate-900 border-slate-200"
                       placeholder="Zip Code"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-white/70">City</Label>
+                    <Label className="text-slate-600">City</Label>
                     <Input
                       value={profileData.city}
                       onChange={(e) => setProfileData(prev => ({ ...prev, city: e.target.value }))}
-                      className="bg-[#040a0f] text-white border-white/10"
+                      className="bg-slate-50 text-slate-900 border-slate-200"
                       placeholder="City"
                     />
                   </div>
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-teal-500 text-black hover:bg-teal-400 mt-6"
+                  className="w-full bg-[#2563eb] text-white hover:bg-[#1d4ed8] mt-6"
                 >
                   Submit
                 </Button>
@@ -1039,8 +1039,8 @@ const Dashboard = () => {
           {/* Wallets Page */}
           {activeView === 'wallets' && (
             <div className="space-y-6">
-              <h2 className="text-2xl font-semibold text-white">User Coin Wallets</h2>
-              <div className="rounded-lg border border-white/5 bg-[#060d13]/70 p-8">
+              <h2 className="text-2xl font-semibold text-slate-900">User Coin Wallets</h2>
+              <div className="rounded-lg border border-slate-200 bg-white/70 p-8">
                 <p className="text-center text-red-500 text-lg">
                   You have no wallet yet, please buy some plan first
                 </p>
@@ -1052,24 +1052,24 @@ const Dashboard = () => {
           {activeView === '2fa-security' && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Left Panel - Add Your Account */}
-              <div className="rounded-lg border border-white/5 bg-[#060d13]/70 p-6 space-y-4">
-                <h2 className="text-2xl font-semibold text-white">Add Your Account</h2>
-                <p className="text-white/70">
+              <div className="rounded-lg border border-slate-200 bg-white/70 p-6 space-y-4">
+                <h2 className="text-2xl font-semibold text-slate-900">Add Your Account</h2>
+                <p className="text-slate-600">
                   Use the QR code or setup key on your Google Authenticator app to add your account.
                 </p>
-                <div className="flex items-center justify-center bg-[#040a0f] rounded-lg p-8 border border-white/10">
-                  <div className="text-white/50 text-center">
+                <div className="flex items-center justify-center bg-slate-100 rounded-lg p-8 border border-slate-200">
+                  <div className="text-slate-500 text-center">
                     <Lock className="h-16 w-16 mx-auto mb-2" />
                     <p>QR Code Placeholder</p>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-white/70">Setup Key</Label>
+                  <Label className="text-slate-600">Setup Key</Label>
                   <div className="flex gap-2">
                     <Input
                       value={setupKey}
                       readOnly
-                      className="bg-[#040a0f] text-white border-white/10"
+                      className="bg-slate-50 text-slate-900 border-slate-200"
                     />
                     <Button
                       type="button"
@@ -1080,20 +1080,20 @@ const Dashboard = () => {
                           description: 'Setup key copied to clipboard',
                         });
                       }}
-                      className="bg-teal-500 text-black hover:bg-teal-400"
+                      className="bg-[#2563eb] text-white hover:bg-[#1d4ed8]"
                     >
                       <Copy className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
-                <div className="space-y-2 pt-4 border-t border-white/10">
+                <div className="space-y-2 pt-4 border-t border-slate-200">
                   <div className="flex items-center gap-2">
-                    <Info className="h-4 w-4 text-teal-400" />
-                    <span className="text-white font-semibold">Help</span>
+                    <Info className="h-4 w-4 text-[#2563eb]" />
+                    <span className="text-slate-900 font-semibold">Help</span>
                   </div>
-                  <p className="text-white/70 text-sm">
+                  <p className="text-slate-600 text-sm">
                     Google Authenticator is a multifactor app for mobile devices. It generates timed codes used during the 2-step verification process. To use Google Authenticator, install the Google Authenticator application on your mobile device.{' '}
-                    <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:underline">
+                    <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank" rel="noopener noreferrer" className="text-[#2563eb] hover:underline">
                       Download
                     </a>
                   </p>
@@ -1101,14 +1101,14 @@ const Dashboard = () => {
               </div>
 
               {/* Right Panel - Enable 2FA Security */}
-              <div className="rounded-lg border border-white/5 bg-[#060d13]/70 p-6 space-y-4">
-                <h2 className="text-2xl font-semibold text-white">Enable 2FA Security</h2>
+              <div className="rounded-lg border border-slate-200 bg-white/70 p-6 space-y-4">
+                <h2 className="text-2xl font-semibold text-slate-900">Enable 2FA Security</h2>
                 <div className="space-y-2">
-                  <Label className="text-white/70">Google Authenticator OTP</Label>
+                  <Label className="text-slate-600">Google Authenticator OTP</Label>
                   <Input
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    className="bg-[#040a0f] text-white border-white/10"
+                    className="bg-slate-50 text-slate-900 border-slate-200"
                     placeholder="Enter the OTP"
                   />
                 </div>
@@ -1129,7 +1129,7 @@ const Dashboard = () => {
                     });
                     setOtp('');
                   }}
-                  className="w-full bg-teal-500 text-black hover:bg-teal-400"
+                  className="w-full bg-[#2563eb] text-white hover:bg-[#1d4ed8]"
                 >
                   Submit
                 </Button>
@@ -1140,7 +1140,7 @@ const Dashboard = () => {
           {/* Change Password Page */}
           {activeView === 'change-password' && (
             <div className="space-y-6">
-              <h2 className="text-2xl font-semibold text-white">Change Password</h2>
+              <h2 className="text-2xl font-semibold text-slate-900">Change Password</h2>
               <form
                 onSubmit={async (e) => {
                   e.preventDefault();
@@ -1188,44 +1188,44 @@ const Dashboard = () => {
                     });
                   }
                 }}
-                className="rounded-lg border border-white/5 bg-[#060d13]/70 p-6 space-y-4 max-w-2xl"
+                className="rounded-lg border border-slate-200 bg-white/70 p-6 space-y-4 max-w-2xl"
               >
                 <div className="space-y-2">
-                  <Label className="text-white/70">Current Password</Label>
+                  <Label className="text-slate-600">Current Password</Label>
                   <Input
                     type="password"
                     value={passwordData.currentPassword}
                     onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
                     required
-                    className="bg-[#040a0f] text-white border-white/10"
+                    className="bg-slate-50 text-slate-900 border-slate-200"
                     placeholder="Enter your current password"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-white/70">New Password</Label>
+                  <Label className="text-slate-600">New Password</Label>
                   <Input
                     type="password"
                     value={passwordData.newPassword}
                     onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
                     required
-                    className="bg-[#040a0f] text-white border-white/10"
+                    className="bg-slate-50 text-slate-900 border-slate-200"
                     placeholder="Enter your new password"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-white/70">Confirm New Password</Label>
+                  <Label className="text-slate-600">Confirm New Password</Label>
                   <Input
                     type="password"
                     value={passwordData.confirmPassword}
                     onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
                     required
-                    className="bg-[#040a0f] text-white border-white/10"
+                    className="bg-slate-50 text-slate-900 border-slate-200"
                     placeholder="Confirm your new password"
                   />
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-teal-500 text-black hover:bg-teal-400"
+                  className="w-full bg-[#2563eb] text-white hover:bg-[#1d4ed8]"
                 >
                   Change Password
                 </Button>
@@ -1239,55 +1239,55 @@ const Dashboard = () => {
               {/* Core Leadership Section */}
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-3xl font-bold text-white mb-2">Core Leadership</h2>
+                  <h2 className="text-3xl font-bold text-slate-900 mb-2">Core Leadership</h2>
                   <div className="w-16 h-0.5 bg-cyan-400"></div>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Alexander Wright */}
-                  <div className="bg-[#060d13]/70 rounded-lg p-6 border border-white/5">
-                    <div className="w-32 h-32 mx-auto mb-4 rounded-full border-4 border-cyan-400 overflow-hidden">
+                  <div className="bg-white/70 rounded-lg p-6 border border-slate-200">
+                    <div className="w-32 h-32 mx-auto mb-4 rounded-full border-4 border-[#2563eb] overflow-hidden">
                       <img 
                         src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop" 
                         alt="Alexander Wright"
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <h3 className="text-xl font-bold text-white text-center mb-2">Alexander Wright</h3>
-                    <p className="text-white/70 text-center mb-3">Founder & CEO</p>
-                    <p className="text-white/80 text-sm text-left">
+                    <h3 className="text-xl font-bold text-slate-900 text-center mb-2">Alexander Wright</h3>
+                    <p className="text-slate-600 text-center mb-3">Founder & CEO</p>
+                    <p className="text-slate-700 text-sm text-left">
                       Former blockchain architect at Ethereum Foundation with 12+ years of experience in cryptocurrency mining operations. Alexander leads our strategic vision and technological innovation.
                     </p>
                   </div>
                   
                   {/* Sophia Smith */}
-                  <div className="bg-[#060d13]/70 rounded-lg p-6 border border-white/5">
-                    <div className="w-32 h-32 mx-auto mb-4 rounded-full border-4 border-cyan-400 overflow-hidden">
+                  <div className="bg-white/70 rounded-lg p-6 border border-slate-200">
+                    <div className="w-32 h-32 mx-auto mb-4 rounded-full border-4 border-[#2563eb] overflow-hidden">
                       <img 
                         src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop" 
                         alt="Sophia Smith"
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <h3 className="text-xl font-bold text-white text-center mb-2">Sophia Smith</h3>
-                    <p className="text-white/70 text-center mb-3">CTO & Head of Research</p>
-                    <p className="text-white/80 text-sm text-left">
+                    <h3 className="text-xl font-bold text-slate-900 text-center mb-2">Sophia Smith</h3>
+                    <p className="text-slate-600 text-center mb-3">CTO & Head of Research</p>
+                    <p className="text-slate-700 text-sm text-left">
                       Computer science PhD with specialization in distributed systems. Sophia oversees our technological infrastructure and leads research into next-generation mining algorithms and hardware optimization.
                     </p>
                   </div>
                   
                   {/* Michael Rodriguez */}
-                  <div className="bg-[#060d13]/70 rounded-lg p-6 border border-white/5">
-                    <div className="w-32 h-32 mx-auto mb-4 rounded-full border-4 border-cyan-400 overflow-hidden">
+                  <div className="bg-white/70 rounded-lg p-6 border border-slate-200">
+                    <div className="w-32 h-32 mx-auto mb-4 rounded-full border-4 border-[#2563eb] overflow-hidden">
                       <img 
                         src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop" 
                         alt="Michael Rodriguez"
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <h3 className="text-xl font-bold text-white text-center mb-2">Michael Rodriguez</h3>
-                    <p className="text-white/70 text-center mb-3">COO & Strategic Partnerships</p>
-                    <p className="text-white/80 text-sm text-left">
+                    <h3 className="text-xl font-bold text-slate-900 text-center mb-2">Michael Rodriguez</h3>
+                    <p className="text-slate-600 text-center mb-3">COO & Strategic Partnerships</p>
+                    <p className="text-slate-700 text-sm text-left">
                       Former venture capitalist with extensive experience in scaling Web3 startups. Michael manages our operational efficiency and builds strategic relationships with key industry players.
                     </p>
                   </div>
@@ -1299,28 +1299,28 @@ const Dashboard = () => {
                 <div className="space-y-6 relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent blur-3xl"></div>
                   <div className="relative">
-                    <h2 className="text-3xl font-bold text-white mb-4">Revolutionizing Crypto Mining</h2>
-                    <p className="text-white/80 text-lg mb-8">
+                    <h2 className="text-3xl font-bold text-slate-900 mb-4">Revolutionizing Crypto Mining</h2>
+                    <p className="text-slate-700 text-lg mb-8">
                       We're building the most efficient, sustainable, and profitable mining infrastructure for the decentralized future.
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                       <div>
-                        <div className="text-4xl font-bold text-white mb-2">250+</div>
-                        <div className="text-white/70 text-sm">Mining Rigs</div>
+                        <div className="text-4xl font-bold text-slate-900 mb-2">250+</div>
+                        <div className="text-slate-600 text-sm">Mining Rigs</div>
                       </div>
                       <div>
-                        <div className="text-4xl font-bold text-white mb-2">43%</div>
-                        <div className="text-white/70 text-sm">Energy Efficiency</div>
+                        <div className="text-4xl font-bold text-slate-900 mb-2">43%</div>
+                        <div className="text-slate-600 text-sm">Energy Efficiency</div>
                       </div>
                       <div>
-                        <div className="text-4xl font-bold text-white mb-2">24/7</div>
-                        <div className="text-white/70 text-sm">Technical Support</div>
+                        <div className="text-4xl font-bold text-slate-900 mb-2">24/7</div>
+                        <div className="text-slate-600 text-sm">Technical Support</div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="relative">
-                  <div className="aspect-square rounded-lg overflow-hidden border border-white/10">
+                  <div className="aspect-square rounded-lg overflow-hidden border border-slate-200">
                     <img 
                       src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=600&h=600&fit=crop" 
                       alt="Cryptocurrency coins"
@@ -1333,103 +1333,103 @@ const Dashboard = () => {
               {/* Our Team Section */}
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-3xl font-bold text-white mb-2">Our Team</h2>
+                  <h2 className="text-3xl font-bold text-slate-900 mb-2">Our Team</h2>
                   <div className="w-16 h-0.5 bg-cyan-400"></div>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {/* David Kim */}
-                  <div className="bg-[#060d13]/70 rounded-lg p-6 border border-white/5">
-                    <div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-cyan-400 overflow-hidden">
+                  <div className="bg-white/70 rounded-lg p-6 border border-slate-200">
+                    <div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-[#2563eb] overflow-hidden">
                       <img 
                         src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop" 
                         alt="David Kim"
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <h3 className="text-lg font-bold text-white text-center mb-1">David Kim</h3>
-                    <p className="text-white/70 text-center mb-3 text-sm">Backend Developer</p>
-                    <p className="text-white/80 text-sm text-left">
+                    <h3 className="text-lg font-bold text-slate-900 text-center mb-1">David Kim</h3>
+                    <p className="text-slate-600 text-center mb-3 text-sm">Backend Developer</p>
+                    <p className="text-slate-700 text-sm text-left">
                       Specializes in blockchain node architecture and mining pool optimization with 5+ years experience in the field.
                     </p>
                   </div>
                   
                   {/* Abraham Johnson */}
-                  <div className="bg-[#060d13]/70 rounded-lg p-6 border border-white/5">
-                    <div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-cyan-400 overflow-hidden">
+                  <div className="bg-white/70 rounded-lg p-6 border border-slate-200">
+                    <div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-[#2563eb] overflow-hidden">
                       <img 
                         src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop" 
                         alt="Abraham Johnson"
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <h3 className="text-lg font-bold text-white text-center mb-1">Abraham Johnson</h3>
-                    <p className="text-white/70 text-center mb-3 text-sm">Hardware Engineer</p>
-                    <p className="text-white/80 text-sm text-left">
+                    <h3 className="text-lg font-bold text-slate-900 text-center mb-1">Abraham Johnson</h3>
+                    <p className="text-slate-600 text-center mb-3 text-sm">Hardware Engineer</p>
+                    <p className="text-slate-700 text-sm text-left">
                       Expert in ASIC design and thermodynamics optimization. Previously worked at Bitmain developing mining hardware.
                     </p>
                   </div>
                   
                   {/* James Wilson */}
-                  <div className="bg-[#060d13]/70 rounded-lg p-6 border border-white/5">
-                    <div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-cyan-400 overflow-hidden">
+                  <div className="bg-white/70 rounded-lg p-6 border border-slate-200">
+                    <div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-[#2563eb] overflow-hidden">
                       <img 
                         src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop" 
                         alt="James Wilson"
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <h3 className="text-lg font-bold text-white text-center mb-1">James Wilson</h3>
-                    <p className="text-white/70 text-center mb-3 text-sm">Security Specialist</p>
-                    <p className="text-white/80 text-sm text-left">
+                    <h3 className="text-lg font-bold text-slate-900 text-center mb-1">James Wilson</h3>
+                    <p className="text-slate-600 text-center mb-3 text-sm">Security Specialist</p>
+                    <p className="text-slate-700 text-sm text-left">
                       Blockchain security expert with background in cryptography and secure wallet implementations.
                     </p>
                   </div>
                   
                   {/* Jack Thompson */}
-                  <div className="bg-[#060d13]/70 rounded-lg p-6 border border-white/5">
-                    <div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-cyan-400 overflow-hidden">
+                  <div className="bg-white/70 rounded-lg p-6 border border-slate-200">
+                    <div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-[#2563eb] overflow-hidden">
                       <img 
                         src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=400&fit=crop" 
                         alt="Jack Thompson"
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <h3 className="text-lg font-bold text-white text-center mb-1">Jack Thompson</h3>
-                    <p className="text-white/70 text-center mb-3 text-sm">Data Analyst</p>
-                    <p className="text-white/80 text-sm text-left">
+                    <h3 className="text-lg font-bold text-slate-900 text-center mb-1">Jack Thompson</h3>
+                    <p className="text-slate-600 text-center mb-3 text-sm">Data Analyst</p>
+                    <p className="text-slate-700 text-sm text-left">
                       Market intelligence expert focused on cryptocurrency trends and mining profitability analysis.
                     </p>
                   </div>
                   
                   {/* Robert Williams */}
-                  <div className="bg-[#060d13]/70 rounded-lg p-6 border border-white/5">
-                    <div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-cyan-400 overflow-hidden">
+                  <div className="bg-white/70 rounded-lg p-6 border border-slate-200">
+                    <div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-[#2563eb] overflow-hidden">
                       <img 
                         src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop" 
                         alt="Robert Williams"
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <h3 className="text-lg font-bold text-white text-center mb-1">Robert Williams</h3>
-                    <p className="text-white/70 text-center mb-3 text-sm">Operations Manager</p>
-                    <p className="text-white/80 text-sm text-left">
+                    <h3 className="text-lg font-bold text-slate-900 text-center mb-1">Robert Williams</h3>
+                    <p className="text-slate-600 text-center mb-3 text-sm">Operations Manager</p>
+                    <p className="text-slate-700 text-sm text-left">
                       Logistics expert managing our global mining operations and ensuring seamless day-to-day functionality.
                     </p>
                   </div>
                   
                   {/* Olivia Martinez */}
-                  <div className="bg-[#060d13]/70 rounded-lg p-6 border border-white/5">
-                    <div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-cyan-400 overflow-hidden">
+                  <div className="bg-white/70 rounded-lg p-6 border border-slate-200">
+                    <div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-[#2563eb] overflow-hidden">
                       <img 
                         src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop" 
                         alt="Olivia Martinez"
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <h3 className="text-lg font-bold text-white text-center mb-1">Olivia Martinez</h3>
-                    <p className="text-white/70 text-center mb-3 text-sm">Client Relations</p>
-                    <p className="text-white/80 text-sm text-left">
+                    <h3 className="text-lg font-bold text-slate-900 text-center mb-1">Olivia Martinez</h3>
+                    <p className="text-slate-600 text-center mb-3 text-sm">Client Relations</p>
+                    <p className="text-slate-700 text-sm text-left">
                       Handles investor communications and ensures exceptional customer experience across all touchpoints.
                     </p>
                   </div>
@@ -1438,10 +1438,10 @@ const Dashboard = () => {
 
               {/* Supported Cryptocurrencies Section */}
               <div className="space-y-6">
-                <h2 className="text-3xl font-bold text-white text-center">Supported Cryptocurrencies</h2>
+                <h2 className="text-3xl font-bold text-slate-900 text-center">Supported Cryptocurrencies</h2>
                 <div className="flex flex-wrap justify-center items-center gap-8">
                   {/* Bitcoin */}
-                  <div className="w-16 h-16 rounded-full overflow-hidden bg-teal-500 flex items-center justify-center p-2">
+                  <div className="w-16 h-16 rounded-full overflow-hidden bg-[#2563eb] flex items-center justify-center p-2">
                     <img 
                       src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" 
                       alt="Bitcoin"
@@ -1518,7 +1518,7 @@ const Dashboard = () => {
               {/* Our Partners Section */}
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-3xl font-bold text-white mb-2">Our Partners</h2>
+                  <h2 className="text-3xl font-bold text-slate-900 mb-2">Our Partners</h2>
                   <div className="w-16 h-0.5 bg-cyan-400"></div>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -1565,21 +1565,21 @@ const Dashboard = () => {
           {/* About Us Page */}
           {activeView === 'about-us' && (
             <div className="space-y-6">
-              <h1 className="text-3xl font-bold text-white mb-6">About Us</h1>
+              <h1 className="text-3xl font-bold text-slate-900 mb-6">About Us</h1>
               
               <div className="space-y-6">
                 {/* Mission Section */}
-                <div className="rounded-lg border border-white/5 bg-[#060d13]/70 p-8">
-                  <h2 className="text-2xl font-semibold text-white mb-4">Our Mission</h2>
-                  <p className="text-white/80 text-lg leading-relaxed">
+                <div className="rounded-lg border border-slate-200 bg-white/70 p-8">
+                  <h2 className="text-2xl font-semibold text-slate-900 mb-4">Our Mission</h2>
+                  <p className="text-slate-700 text-lg leading-relaxed">
                     Grillhashpowermine is one of the leading cryptocurrency mining platforms, offering cryptocurrency mining capacities in every range - for newcomers and experienced miners alike. Our mission is to make acquiring cryptocurrencies easy and fast for everyone.
                   </p>
                 </div>
                 
                 {/* Company Overview */}
-                <div className="rounded-lg border border-white/5 bg-[#060d13]/70 p-8">
-                  <h2 className="text-2xl font-semibold text-white mb-4">Company Overview</h2>
-                  <div className="space-y-4 text-white/80">
+                <div className="rounded-lg border border-slate-200 bg-white/70 p-8">
+                  <h2 className="text-2xl font-semibold text-slate-900 mb-4">Company Overview</h2>
+                  <div className="space-y-4 text-slate-700">
                     <p>
                       As a wholly owned subsidiary of Digital Currency Group, we offer clients the opportunity to tap into our ecosystem. Grillhashpowermine has entered a deep strategic partnership agreement with Coinbase, the largest cryptocurrency exchange in the United States.
                     </p>
@@ -1593,45 +1593,45 @@ const Dashboard = () => {
                 </div>
                 
                 {/* Why Choose Us */}
-                <div className="rounded-lg border border-white/5 bg-[#060d13]/70 p-8">
-                  <h2 className="text-2xl font-semibold text-white mb-4">Why Choose Grillhashpowermine?</h2>
+                <div className="rounded-lg border border-slate-200 bg-white/70 p-8">
+                  <h2 className="text-2xl font-semibold text-slate-900 mb-4">Why Choose Grillhashpowermine?</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                    <div className="bg-[#040a0f] rounded-lg p-6 border border-white/5">
-                      <div className="w-12 h-12 bg-teal-500/20 rounded-full flex items-center justify-center mb-4">
-                        <Zap className="h-6 w-6 text-teal-400" />
+                    <div className="bg-slate-100 rounded-lg p-6 border border-slate-200">
+                      <div className="w-12 h-12 bg-[#2563eb]/20 rounded-full flex items-center justify-center mb-4">
+                        <Zap className="h-6 w-6 text-[#2563eb]" />
                       </div>
-                      <h3 className="text-lg font-semibold text-white mb-2">High Performance</h3>
-                      <p className="text-white/70 text-sm">
+                      <h3 className="text-lg font-semibold text-slate-900 mb-2">High Performance</h3>
+                      <p className="text-slate-600 text-sm">
                         Our state-of-the-art mining facilities ensure optimal hash rates and maximum profitability.
                       </p>
                     </div>
                     
-                    <div className="bg-[#040a0f] rounded-lg p-6 border border-white/5">
-                      <div className="w-12 h-12 bg-teal-500/20 rounded-full flex items-center justify-center mb-4">
-                        <Lock className="h-6 w-6 text-teal-400" />
+                    <div className="bg-slate-100 rounded-lg p-6 border border-slate-200">
+                      <div className="w-12 h-12 bg-[#2563eb]/20 rounded-full flex items-center justify-center mb-4">
+                        <Lock className="h-6 w-6 text-[#2563eb]" />
                       </div>
-                      <h3 className="text-lg font-semibold text-white mb-2">Secure & Trusted</h3>
-                      <p className="text-white/70 text-sm">
+                      <h3 className="text-lg font-semibold text-slate-900 mb-2">Secure & Trusted</h3>
+                      <p className="text-slate-600 text-sm">
                         Funds are supervised by Coinbase, providing enterprise-level security and peace of mind.
                       </p>
                     </div>
                     
-                    <div className="bg-[#040a0f] rounded-lg p-6 border border-white/5">
-                      <div className="w-12 h-12 bg-teal-500/20 rounded-full flex items-center justify-center mb-4">
-                        <CircleDollarSign className="h-6 w-6 text-teal-400" />
+                    <div className="bg-slate-100 rounded-lg p-6 border border-slate-200">
+                      <div className="w-12 h-12 bg-[#2563eb]/20 rounded-full flex items-center justify-center mb-4">
+                        <CircleDollarSign className="h-6 w-6 text-[#2563eb]" />
                       </div>
-                      <h3 className="text-lg font-semibold text-white mb-2">Daily Payouts</h3>
-                      <p className="text-white/70 text-sm">
+                      <h3 className="text-lg font-semibold text-slate-900 mb-2">Daily Payouts</h3>
+                      <p className="text-slate-600 text-sm">
                         Receive your mining rewards daily with transparent and reliable payment processing.
                       </p>
                     </div>
                     
-                    <div className="bg-[#040a0f] rounded-lg p-6 border border-white/5">
-                      <div className="w-12 h-12 bg-teal-500/20 rounded-full flex items-center justify-center mb-4">
-                        <Headphones className="h-6 w-6 text-teal-400" />
+                    <div className="bg-slate-100 rounded-lg p-6 border border-slate-200">
+                      <div className="w-12 h-12 bg-[#2563eb]/20 rounded-full flex items-center justify-center mb-4">
+                        <Headphones className="h-6 w-6 text-[#2563eb]" />
                       </div>
-                      <h3 className="text-lg font-semibold text-white mb-2">24/7 Support</h3>
-                      <p className="text-white/70 text-sm">
+                      <h3 className="text-lg font-semibold text-slate-900 mb-2">24/7 Support</h3>
+                      <p className="text-slate-600 text-sm">
                         Our dedicated support team is available around the clock to assist you with any questions.
                       </p>
                     </div>
@@ -1639,44 +1639,44 @@ const Dashboard = () => {
                 </div>
                 
                 {/* Statistics */}
-                <div className="rounded-lg border border-white/5 bg-[#060d13]/70 p-8">
-                  <h2 className="text-2xl font-semibold text-white mb-6">Our Achievements</h2>
+                <div className="rounded-lg border border-slate-200 bg-white/70 p-8">
+                  <h2 className="text-2xl font-semibold text-slate-900 mb-6">Our Achievements</h2>
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-teal-400 mb-2">100K+</div>
-                      <div className="text-white/70">Active Users</div>
+                      <div className="text-4xl font-bold text-[#2563eb] mb-2">100K+</div>
+                      <div className="text-slate-600">Active Users</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-teal-400 mb-2">$50M+</div>
-                      <div className="text-white/70">Mined Value</div>
+                      <div className="text-4xl font-bold text-[#2563eb] mb-2">$50M+</div>
+                      <div className="text-slate-600">Mined Value</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-teal-400 mb-2">99.9%</div>
-                      <div className="text-white/70">Uptime</div>
+                      <div className="text-4xl font-bold text-[#2563eb] mb-2">99.9%</div>
+                      <div className="text-slate-600">Uptime</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-teal-400 mb-2">150+</div>
-                      <div className="text-white/70">Countries</div>
+                      <div className="text-4xl font-bold text-[#2563eb] mb-2">150+</div>
+                      <div className="text-slate-600">Countries</div>
                     </div>
                   </div>
                 </div>
                 
                 {/* Contact Section */}
-                <div className="rounded-lg border border-white/5 bg-[#060d13]/70 p-8">
-                  <h2 className="text-2xl font-semibold text-white mb-4">Get in Touch</h2>
-                  <p className="text-white/80 mb-6">
+                <div className="rounded-lg border border-slate-200 bg-white/70 p-8">
+                  <h2 className="text-2xl font-semibold text-slate-900 mb-4">Get in Touch</h2>
+                  <p className="text-slate-700 mb-6">
                     Have questions or want to learn more? We're here to help!
                   </p>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
-                      <Mail className="h-5 w-5 text-teal-400" />
-                      <a href="mailto:support@Grillhashpowermine.com" className="text-white/70 hover:text-teal-400 transition-colors">
+                      <Mail className="h-5 w-5 text-[#2563eb]" />
+                      <a href="mailto:support@Grillhashpowermine.com" className="text-slate-600 hover:text-[#2563eb] transition-colors">
                         support@Grillhashpowermine.com
                       </a>
                     </div>
                     <div className="flex items-start gap-3">
-                      <MapPin className="h-5 w-5 text-teal-400 mt-1" />
-                      <span className="text-white/70">
+                      <MapPin className="h-5 w-5 text-[#2563eb] mt-1" />
+                      <span className="text-slate-600">
                         57 Kingfisher Grove, Willenhall, England, WV12 5HG
                       </span>
                     </div>
@@ -1689,41 +1689,41 @@ const Dashboard = () => {
           {/* Dashboard View */}
           {activeView === 'dashboard' && (
             <>
-          <section className="rounded-2xl border border-white/5 bg-[#060d13]/70 p-6 text-sm leading-relaxed text-white/80">
-            <h2 className="mb-3 text-lg font-semibold text-white">{copy.heroTitle}</h2>
+          <section className="rounded-2xl border border-slate-200 bg-white/70 p-6 text-sm leading-relaxed text-slate-700">
+            <h2 className="mb-3 text-lg font-semibold text-slate-900">{copy.heroTitle}</h2>
             <p>{copy.heroBody1}</p>
             <p className="mt-3">{copy.heroBody2}</p>
             <p className="mt-3">{copy.heroBody3}</p>
           </section>
 
           <section className="grid gap-4 md:grid-cols-3">
-            <Card className="bg-gradient-to-br from-[#1B2436] to-[#131B2B] border-white/5">
+            <Card className="bg-white border-slate-200 shadow-sm">
               <CardHeader className="pb-2">
-                <CardTitle className="text-white">Balance</CardTitle>
-                <CardDescription className="text-teal-400">Deposit</CardDescription>
+                <CardTitle className="text-slate-900">Balance</CardTitle>
+                <CardDescription className="text-[#2563eb]">Deposit</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-3xl font-bold">{formatCurrency(miningStats?.total_mined)}</p>
+                <p className="text-3xl font-bold text-slate-900">{formatCurrency(miningStats?.total_mined)}</p>
               </CardContent>
             </Card>
-            <Card className="bg-gradient-to-br from-[#1B2436] to-[#131B2B] border-white/5">
+            <Card className="bg-white border-slate-200 shadow-sm">
               <CardHeader className="pb-2">
-                <CardTitle className="text-white">Referral Bonus</CardTitle>
-                <CardDescription className="text-teal-400">My Referrals</CardDescription>
+                <CardTitle className="text-slate-900">Referral Bonus</CardTitle>
+                <CardDescription className="text-[#2563eb]">My Referrals</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-3xl font-bold">{formatCurrency(referralBalance ?? profile?.referral_balance ?? 0)}</p>
+                <p className="text-3xl font-bold text-slate-900">{formatCurrency(referralBalance ?? profile?.referral_balance ?? 0)}</p>
               </CardContent>
             </Card>
-            <Card className="bg-gradient-to-br from-[#1B2436] to-[#131B2B] border-white/5">
+            <Card className="bg-white border-slate-200 shadow-sm">
               <CardHeader className="pb-2">
-                <CardTitle className="text-white">Grillhashpowermine</CardTitle>
-                <CardDescription className="text-teal-400">Start Mining</CardDescription>
+                <CardTitle className="text-slate-900">Grillhashpowermine</CardTitle>
+                <CardDescription className="text-[#2563eb]">Start Mining</CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
-                <p className="text-white/70">Start your Miner</p>
+                <p className="text-slate-600">Start your Miner</p>
                 <Button 
-                  className="w-fit bg-teal-500 text-black hover:bg-teal-400"
+                  className="w-fit bg-[#2563eb] text-white hover:bg-[#1d4ed8]"
                   onClick={() => navigate('/start-mining')}
                 >
                   Start Mining
@@ -1733,28 +1733,28 @@ const Dashboard = () => {
           </section>
 
           <section className="grid gap-6 md:grid-cols-3">
-            <Card className="border-white/5 bg-[#060d13]/70">
+            <Card className="border-slate-200 bg-white/70">
               <CardHeader>
-                <CardTitle className="text-white">Deposit</CardTitle>
-                <CardDescription className="text-white/60">Secure Coinbase gateway</CardDescription>
+                <CardTitle className="text-slate-900">Deposit</CardTitle>
+                <CardDescription className="text-slate-500">Secure Coinbase gateway</CardDescription>
               </CardHeader>
               <CardContent>
                 <Button 
-                  className="w-full bg-teal-500 text-black hover:bg-teal-400"
+                  className="w-full bg-[#2563eb] text-white hover:bg-[#1d4ed8]"
                   onClick={() => navigate('/deposit')}
                 >
                   {copy.depositCta}
                 </Button>
               </CardContent>
             </Card>
-            <Card className="border-white/5 bg-[#060d13]/70">
+            <Card className="border-slate-200 bg-white/70">
               <CardHeader>
-                <CardTitle className="text-white">Withdraw</CardTitle>
-                <CardDescription className="text-white/60">Request payouts seamlessly</CardDescription>
+                <CardTitle className="text-slate-900">Withdraw</CardTitle>
+                <CardDescription className="text-slate-500">Request payouts seamlessly</CardDescription>
               </CardHeader>
               <CardContent>
                 <Button 
-                  className="w-full bg-teal-500 text-black hover:bg-teal-400"
+                  className="w-full bg-[#2563eb] text-white hover:bg-[#1d4ed8]"
                   onClick={() => navigate('/withdraw')}
                 >
                   {copy.withdrawCta}
@@ -1764,59 +1764,59 @@ const Dashboard = () => {
           </section>
 
           <section className="grid gap-6">
-            <div className="rounded-2xl border border-white/5 bg-[#060d13]/70 p-6">
-              <h4 className="mb-4 text-xl font-semibold text-white">Account Information</h4>
-              <div className="space-y-4 text-sm text-white/80">
-                <div className="flex items-center justify-between rounded-xl bg-[#101B2C] p-3">
+            <div className="rounded-2xl border border-slate-200 bg-white/70 p-6">
+              <h4 className="mb-4 text-xl font-semibold text-slate-900">Account Information</h4>
+              <div className="space-y-4 text-sm text-slate-700">
+                <div className="flex items-center justify-between rounded-xl bg-slate-50 border border-slate-200 p-3">
                   <p>Email</p>
                   <p>{profile?.email}</p>
                 </div>
-                <div className="flex items-center justify-between rounded-xl bg-[#101B2C] p-3">
+                <div className="flex items-center justify-between rounded-xl bg-slate-50 border border-slate-200 p-3">
                   <p>Full Name</p>
                   <p>{profile?.full_name || 'Not set'}</p>
                 </div>
-                <div className="flex items-center justify-between rounded-xl bg-[#101B2C] p-3 capitalize">
+                <div className="flex items-center justify-between rounded-xl bg-slate-50 border border-slate-200 p-3 capitalize">
                   <p>Account Type</p>
                   <p>{profile?.role}</p>
                 </div>
-                <div className="flex items-center justify-between rounded-xl bg-[#101B2C] p-3">
+                <div className="flex items-center justify-between rounded-xl bg-slate-50 border border-slate-200 p-3">
                   <p>Member Since</p>
                   <p>{profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : 'N/A'}</p>
                 </div>
               </div>
 
-              <div className="mt-6 rounded-xl bg-[#101B2C] p-4">
+              <div className="mt-6 rounded-xl bg-slate-50 border border-slate-200 p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-white/60">Need live help?</p>
-                    <p className="text-white">VIP Customers Only</p>
+                    <p className="text-sm text-slate-500">Need live help?</p>
+                    <p className="text-slate-900 font-medium">VIP Customers Only</p>
                   </div>
                   <Button 
                     variant="outline" 
-                    className="border-teal-500 text-teal-400 hover:bg-teal-500/10"
+                    className="border-[#2563eb] text-[#2563eb] hover:bg-blue-50"
                     onClick={() => setActiveView('support-new')}
                   >
                     <Headphones className="mr-2 h-4 w-4" />
                     Contact Support
                   </Button>
                 </div>
-                <p className="mt-4 text-sm text-white/50">support@Grillhashpowermine.com</p>
-                <p className="text-xs text-white/40">57 Kingfisher Grove, Willenhall, England, WV12 5HG (Company No. 15415402)</p>
+                <p className="mt-4 text-sm text-slate-500">support@Grillhashpowermine.com</p>
+                <p className="text-xs text-slate-400">57 Kingfisher Grove, Willenhall, England, WV12 5HG (Company No. 15415402)</p>
               </div>
             </div>
           </section>
 
-          <footer id="about-section" className="rounded-2xl border border-white/5 bg-[#060d13]/70 p-6 text-sm text-white/70">
+          <footer id="about-section" className="rounded-2xl border border-slate-200 bg-white/70 p-6 text-sm text-slate-600">
             <div className="grid gap-6 lg:grid-cols-3">
               <div>
-                <h5 className="text-lg font-semibold text-white">Grillhashpowermine</h5>
+                <h5 className="text-lg font-semibold text-slate-900">Grillhashpowermine</h5>
                 <p className="mt-2">
                   Grillhashpowermine is one of the leading cryptocurrency mining platforms, offering capacities in every range for newcomers and pros.
                   Our mission is to make acquiring cryptocurrencies easy and fast for everyone.
                 </p>
               </div>
               <div>
-                <h5 className="text-lg font-semibold text-white">Quick Links</h5>
+                <h5 className="text-lg font-semibold text-slate-900">Quick Links</h5>
                 <ul className="mt-2 space-y-1">
                   <li>Team</li>
                   <li>AboutUs</li>
@@ -1824,7 +1824,7 @@ const Dashboard = () => {
                 </ul>
               </div>
               <div>
-                <h5 className="text-lg font-semibold text-white">Useful Links</h5>
+                <h5 className="text-lg font-semibold text-slate-900">Useful Links</h5>
                 <ul className="mt-2 space-y-1">
                   <li>Usage Policy</li>
                   <li>Cookie Policy</li>
@@ -1833,7 +1833,7 @@ const Dashboard = () => {
                 </ul>
               </div>
             </div>
-            <p className="mt-6 text-center text-xs text-white/40">Copyright © 2020–2026 Grillhashpowermine All Rights Reserved</p>
+            <p className="mt-6 text-center text-xs text-slate-400">Copyright © 2020–2026 Grillhashpowermine All Rights Reserved</p>
           </footer>
             </>
           )}

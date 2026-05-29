@@ -53,7 +53,7 @@ type Feature = (typeof features)[number];
 function FeatureCard({ feature }: { feature: Feature }) {
   return (
     <div
-      className="group relative bg-[#060d13] border border-white/5 rounded-2xl p-5 hover:border-teal-500/25 transition-all duration-400 overflow-hidden flex gap-4 items-start"
+      className="group relative bg-[#132f4c] border border-white/5 rounded-2xl p-5 hover:border-teal-500/25 transition-all duration-400 overflow-hidden flex gap-4 items-start"
     >
       <div
         className={`absolute left-0 top-4 bottom-4 w-[3px] rounded-full ${feature.barColor} opacity-0 group-hover:opacity-100 transition-opacity duration-400`}
@@ -78,7 +78,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
         style={{
           background:
-            "radial-gradient(ellipse at 0% 50%, rgba(0,229,255,0.04) 0%, transparent 65%)",
+            "radial-gradient(ellipse at 0% 50%, rgba(0,180,230,0.04) 0%, transparent 65%)",
         }}
       />
     </div>
@@ -90,7 +90,7 @@ const BOTTOM_FEATURES = features.slice(3);
 
 export const Features = () => {
   return (
-    <section className="py-24 px-4 bg-[#050b10] relative overflow-hidden">
+    <section className="py-24 px-4 bg-[#0a1e35] relative overflow-hidden">
       {/* Diagonal lines */}
       <div className="absolute inset-0 diagonal-lines pointer-events-none opacity-60" />
 

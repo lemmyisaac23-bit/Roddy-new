@@ -504,7 +504,7 @@ const Deposit = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#040a0f] text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-800">
       <div className="flex">
         <UserSidebar
           activeView={activeView === 'deposit' ? 'deposit' : activeView === 'log' ? 'log' : undefined}
@@ -539,51 +539,51 @@ const Deposit = () => {
 
           {activeView === 'deposit' ? (
             <div className="space-y-6">
-              <div className="rounded-xl border border-[#1F3A52] bg-[#112035] p-6">
-                <p className="text-sm uppercase tracking-[0.3em] text-white/60">Offer Only For Today</p>
-                <h2 className="mt-2 text-2xl font-semibold text-[#AEE6FF]">Boost every large deposit</h2>
-                <ul className="mt-4 space-y-2 text-white/80">
+              <div className="banner-promo">
+                <p className="text-sm uppercase tracking-[0.3em] text-white/90">Offer Only For Today</p>
+                <h2 className="mt-2 text-2xl font-semibold text-white">Boost every large deposit</h2>
+                <ul className="mt-4 space-y-2 text-white/95 text-sm md:text-base">
                   <li>1. Deposits over 2,000 USD earn +3% bonus mining power</li>
                   <li>2. Deposits over 5,000 USD earn +5% bonus mining power</li>
                   <li>3. Deposits over 50,000 USD earn +10% bonus mining power</li>
                 </ul>
               </div>
 
-              <div className="rounded-xl border border-teal-500/30 bg-teal-500/10 p-4 text-sm text-yellow-100">
+              <div className="alert-info">
                 Minimum deposit is <span className="font-semibold">$100</span>.
               </div>
 
               {depositStage === 'form' && (
-                <div className="rounded-xl border border-white/5 bg-[#060d13] p-6">
+                <div className="rounded-xl border border-slate-200 bg-white p-6">
                   <div className="mb-6 flex items-center justify-between">
                     <div>
                       <h2 className="text-xl font-semibold">Deposit on Your USD Wallet</h2>
-                      <p className="text-sm text-white/50">
+                      <p className="text-sm text-slate-600">
                         Select a crypto gateway and enter the amount you want to add
                       </p>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-white/60">
-                      <Shield className="h-4 w-4 text-teal-400" />
+                    <div className="flex items-center gap-2 text-xs text-slate-600">
+                      <Shield className="h-4 w-4 text-[#2563eb]" />
                       SSL encrypted payment instructions
                     </div>
                   </div>
 
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                      <Label className="mb-2 block text-white/80">Select Gateway *</Label>
+                      <Label className="mb-2 block text-slate-700">Select Gateway *</Label>
                       <Select
                         value={gateway || undefined}
                         onValueChange={(value) => handleGatewayChange(value as GatewayValue)}
                       >
-                        <SelectTrigger className="h-12 border-white/10 bg-[#040a0f] text-white">
+                        <SelectTrigger className="h-12 border-slate-300 bg-white text-slate-900 placeholder:text-slate-500">
                           <SelectValue placeholder="Select One" />
                         </SelectTrigger>
-                        <SelectContent className="border-white/10 bg-[#040a0f] text-white">
+                        <SelectContent className="border-slate-200 bg-white text-slate-900">
                           {gatewayOptions.map((option) => (
                             <SelectItem key={option.value} value={option.value}>
                               <div>
                                 <p className="font-medium">{option.label}</p>
-                                <p className="text-xs text-white/50">{option.description}</p>
+                                <p className="text-xs text-slate-600">{option.description}</p>
                               </div>
                             </SelectItem>
                           ))}
@@ -592,37 +592,37 @@ const Deposit = () => {
                     </div>
 
                     <div>
-                      <Label className="mb-2 block text-white/80">Amount</Label>
+                      <Label className="mb-2 block text-slate-700">Amount</Label>
                       <div className="flex gap-2">
                         <Input
                           type="number"
                           value={amount}
                           onChange={(e) => handleAmountChange(e.target.value)}
                           placeholder="Enter amount"
-                          className="h-12 flex-1 border-white/10 bg-[#040a0f] text-white"
+                          className="h-12 flex-1 border-slate-300 bg-white text-slate-900 placeholder:text-slate-500"
                           min={limit.min > 0 ? limit.min : undefined}
                           max={limit.max > 0 ? limit.max : undefined}
                           step="0.01"
                         />
-                        <Button type="button" className="h-12 bg-teal-500 px-6 text-black hover:bg-teal-400">
+                        <Button type="button" className="h-12 bg-[#2563eb] px-6 text-white hover:bg-[#1d4ed8]">
                           USD
                         </Button>
                       </div>
                     </div>
 
                     <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-3">
-                      <div className="rounded-lg border border-white/10 bg-[#040a0f] p-4">
-                        <p className="text-xs uppercase tracking-wide text-white/50">Limit</p>
+                      <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                        <p className="text-xs uppercase tracking-wide text-slate-600">Limit</p>
                         <p className="mt-2 text-lg font-semibold">
                           {limit.min > 0 ? `${formatUSD(limit.min)} - ${formatUSD(limit.max)}` : 'Select gateway'}
                         </p>
                       </div>
-                      <div className="rounded-lg border border-white/10 bg-[#040a0f] p-4">
-                        <p className="text-xs uppercase tracking-wide text-white/50">Charge</p>
+                      <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                        <p className="text-xs uppercase tracking-wide text-slate-600">Charge</p>
                         <p className="mt-2 text-lg font-semibold">{charge > 0 ? formatUSD(charge) : '$0.00'}</p>
                       </div>
-                      <div className="rounded-lg border border-white/10 bg-[#040a0f] p-4">
-                        <p className="text-xs uppercase tracking-wide text-white/50">Payable</p>
+                      <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                        <p className="text-xs uppercase tracking-wide text-slate-600">Payable</p>
                         <p className="mt-2 text-lg font-semibold">{payable > 0 ? formatUSD(payable) : '$0.00'}</p>
                       </div>
                     </div>
@@ -630,7 +630,7 @@ const Deposit = () => {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="h-12 w-full bg-teal-500 text-lg font-semibold text-black hover:bg-teal-400"
+                      className="h-12 w-full bg-[#2563eb] text-lg font-semibold text-white hover:bg-[#1d4ed8]"
                     >
                       {isSubmitting ? 'Preparing...' : 'Submit'}
                     </Button>
@@ -640,70 +640,70 @@ const Deposit = () => {
 
               {depositStage === 'preview' && previewData && (
                 <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
-                  <div className="rounded-xl border border-white/5 bg-[#060d13] p-6">
+                  <div className="rounded-xl border border-slate-200 bg-white p-6">
                     <button
                       onClick={handleBackToForm}
-                      className="mb-4 flex items-center gap-2 text-sm text-white/60 hover:text-white"
+                      className="mb-4 flex items-center gap-2 text-sm text-slate-600 hover:text-slate-800"
                     >
                       <ArrowLeft className="h-4 w-4" /> Edit amount
                     </button>
-                    <h3 className="text-xl font-semibold text-white">Deposit Summary</h3>
-                    <p className="text-sm text-white/60">Confirm the details before proceeding</p>
+                    <h3 className="text-xl font-semibold text-slate-800">Deposit Summary</h3>
+                    <p className="text-sm text-slate-600">Confirm the details before proceeding</p>
                     <div className="mt-6 space-y-3 text-sm">
                       <div className="flex items-center justify-between">
-                        <span className="text-white/60">Gateway</span>
+                        <span className="text-slate-600">Gateway</span>
                         <span className="font-medium">{`${previewData.gatewayLabel} (${previewData.network})`}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-white/60">Amount</span>
+                        <span className="text-slate-600">Amount</span>
                         <span className="font-medium">{formatUSD(previewData.amount)}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-white/60">Charge</span>
+                        <span className="text-slate-600">Charge</span>
                         <span>{formatUSD(previewData.charge)}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-white/60">Payable</span>
-                        <span className="text-lg font-semibold text-teal-400">{formatUSD(previewData.payable)}</span>
+                        <span className="text-slate-600">Payable</span>
+                        <span className="text-lg font-semibold text-[#2563eb]">{formatUSD(previewData.payable)}</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="rounded-xl border border-white/5 bg-[#060d13] p-6">
-                    <div className="mb-4 flex items-center gap-2 text-sm text-white/60">
-                      <CreditCard className="h-4 w-4 text-teal-400" />
+                  <div className="rounded-xl border border-slate-200 bg-white p-6">
+                    <div className="mb-4 flex items-center gap-2 text-sm text-slate-600">
+                      <CreditCard className="h-4 w-4 text-[#2563eb]" />
                       Payment Preview
                     </div>
                     <div className="space-y-3 text-sm">
-                      <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                        <span className="text-white/60">Amount</span>
+                      <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                        <span className="text-slate-600">Amount</span>
                         <span className="font-medium">{formatUSD(previewData.amount)}</span>
                       </div>
-                      <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                        <span className="text-white/60">Charge</span>
+                      <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                        <span className="text-slate-600">Charge</span>
                         <span className="font-medium">{formatUSD(previewData.charge)}</span>
                       </div>
-                      <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                        <span className="text-white/60">Payable</span>
+                      <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                        <span className="text-slate-600">Payable</span>
                         <span className="font-semibold">{formatUSD(previewData.payable)}</span>
                       </div>
-                      <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                        <span className="text-white/60">Conversion Rate</span>
+                      <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                        <span className="text-slate-600">Conversion Rate</span>
                         <span>1 {previewData.currency} = {formatUSD(previewData.conversionRate)}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-white/60">In {previewData.currency}</span>
+                        <span className="text-slate-600">In {previewData.currency}</span>
                         <span className="text-lg font-semibold text-emerald-400">
                           {formatCrypto(previewData.cryptoAmount)} {previewData.currency}
                         </span>
                       </div>
-                      <p className="mt-4 text-xs text-white/40">
+                      <p className="mt-4 text-xs text-slate-500">
                         Conversion is pulled live. Final crypto amount will be locked on the next step.
                       </p>
                       <Button
                         onClick={handleConfirmPayment}
                         disabled={isConfirming}
-                        className="mt-4 h-12 w-full bg-teal-500 text-black hover:bg-teal-400"
+                        className="mt-4 h-12 w-full bg-[#2563eb] text-white hover:bg-[#1d4ed8]"
                       >
                         {isConfirming ? 'Reserving address...' : 'Pay Now'}
                       </Button>
@@ -714,19 +714,19 @@ const Deposit = () => {
 
               {depositStage === 'payment' && activeDeposit && (
                 <div className="space-y-6">
-                  <div className="rounded-xl border border-white/5 bg-[#060d13] p-6">
+                  <div className="rounded-xl border border-slate-200 bg-white p-6">
                     <div className="flex flex-wrap items-center justify-between gap-4">
                       <div>
-                        <p className="text-sm text-white/60">Transaction ID</p>
-                        <p className="font-mono text-lg text-teal-400">{activeDeposit.transaction_id}</p>
+                        <p className="text-sm text-slate-600">Transaction ID</p>
+                        <p className="font-mono text-lg text-[#2563eb]">{activeDeposit.transaction_id}</p>
                       </div>
                       <Button variant="outline" onClick={handleStartNewDeposit}>
                         Start new deposit
                       </Button>
                     </div>
-                    <div className="mt-6 rounded-xl border border-white/10 bg-[#0D1727] p-6 text-center">
-                      <p className="text-sm text-white/50">PLEASE SEND EXACTLY</p>
-                      <p className="mt-2 text-3xl font-semibold text-emerald-400">
+                    <div className="panel-payment mt-6">
+                      <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">PLEASE SEND EXACTLY</p>
+                      <p className="mt-2 text-3xl font-semibold text-emerald-700">
                         {formatCrypto(
                           typeof activeDeposit.crypto_amount === 'string'
                             ? parseFloat(activeDeposit.crypto_amount)
@@ -734,12 +734,12 @@ const Deposit = () => {
                         )}{' '}
                         {activeDeposit.currency || 'BTC'}
                       </p>
-                      <p className="text-sm text-white/50">TO</p>
+                      <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide mt-4">TO</p>
                       <div className="mt-4 flex items-center justify-center gap-2 text-sm">
                         <span className="font-mono text-[#FF7B7B]">{activeDeposit.deposit_address}</span>
                         <button
                           onClick={() => copyToClipboard(activeDeposit.deposit_address)}
-                          className="rounded-md bg-teal-500/20 p-2 text-teal-400 transition hover:bg-teal-500/30"
+                          className="rounded-md bg-[#2563eb]/20 p-2 text-[#2563eb] transition hover:bg-[#2563eb]/30"
                         >
                           <Copy className="h-4 w-4" />
                         </button>
@@ -752,26 +752,26 @@ const Deposit = () => {
                               <img
                                 src={payQr}
                                 alt="Scan to pay"
-                                className="h-48 w-48 rounded-lg border border-white/10 bg-white p-2 object-contain"
+                                className="h-48 w-48 rounded-lg border border-slate-200 bg-white p-2 object-contain"
                               />
                             ) : (
-                              <div className="flex h-48 w-48 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-sm text-white/50">
+                              <div className="flex h-48 w-48 items-center justify-center rounded-lg border border-slate-200 bg-white/5 text-sm text-slate-600">
                                 No address
                               </div>
                             );
                           })()}
                         </div>
-                        <p className="text-sm text-white/60">
+                        <p className="text-sm text-slate-600">
                           Amount: {formatUSD(activeDeposit.payable)} | Network: {activeDeposit.network}
                         </p>
                       </div>
-                      <p className="mt-4 text-xs text-white/40">
+                      <p className="mt-4 text-xs text-slate-500">
                         Scan the QR code or copy the address. The deposit will appear in your log once the payment is
                         detected on-chain.
                       </p>
                       <Button
                         onClick={() => setShowPaymentConfirmationModal(true)}
-                        className="mt-6 h-12 w-full bg-teal-500 text-black hover:bg-teal-400 font-semibold"
+                        className="mt-6 h-12 w-full bg-[#2563eb] text-white hover:bg-[#1d4ed8] font-semibold"
                       >
                         I Have Paid
                       </Button>
@@ -782,9 +782,9 @@ const Deposit = () => {
 
               {/* Payment Confirmation Modal */}
               <Dialog open={showPaymentConfirmationModal} onOpenChange={setShowPaymentConfirmationModal}>
-                <DialogContent className="bg-[#060d13] border-teal-500/50 text-white max-w-md [&>button]:hidden">
+                <DialogContent className="bg-white border-[#2563eb]/50 text-slate-800 max-w-md [&>button]:hidden">
                   <DialogHeader className="relative">
-                    <DialogTitle className="text-white text-xl font-bold mb-4 pr-8">
+                    <DialogTitle className="text-slate-800 text-xl font-bold mb-4 pr-8">
                       Payment Submitted
                     </DialogTitle>
                     <button
@@ -795,15 +795,15 @@ const Deposit = () => {
                     </button>
                   </DialogHeader>
                   <div className="space-y-4">
-                    <div className="rounded-lg bg-teal-500/10 border border-teal-500/30 p-4">
-                      <p className="text-teal-400 font-semibold mb-2">⏱️ Processing Time</p>
-                      <p className="text-white/90">
-                        Your payment is being processed. It may take <span className="font-semibold text-teal-400">1-5 minutes</span> for the balance to reflect in your account.
+                    <div className="rounded-lg bg-[#2563eb]/10 border border-[#2563eb]/30 p-4">
+                      <p className="text-[#2563eb] font-semibold mb-2">⏱️ Processing Time</p>
+                      <p className="text-slate-700">
+                        Your payment is being processed. It may take <span className="font-semibold text-[#2563eb]">1-5 minutes</span> for the balance to reflect in your account.
                       </p>
                     </div>
                     <div className="rounded-lg bg-blue-500/10 border border-blue-500/30 p-4">
-                      <p className="text-blue-400 font-semibold mb-2">💬 Need Help?</p>
-                      <p className="text-white/90">
+                      <p className="text-blue-800 font-semibold mb-2">💬 Need Help?</p>
+                      <p className="text-slate-700">
                         If your balance doesn't reflect after 5 minutes, please contact our support team for assistance.
                       </p>
                     </div>
@@ -814,7 +814,7 @@ const Deposit = () => {
                           // Refresh deposits to check status
                           fetchDeposits();
                         }}
-                        className="flex-1 bg-teal-500 text-black hover:bg-teal-400 font-semibold"
+                        className="flex-1 bg-[#2563eb] text-white hover:bg-[#1d4ed8] font-semibold"
                       >
                         OK, I Understand
                       </Button>
@@ -824,28 +824,28 @@ const Deposit = () => {
               </Dialog>
             </div>
           ) : (
-            <div className="rounded-lg border border-white/5 bg-[#060d13] p-6">
+            <div className="rounded-lg border border-slate-200 bg-white p-6">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-white/10">
-                      <th className="px-4 py-4 text-left font-semibold text-white/80">Transaction ID</th>
-                      <th className="px-4 py-4 text-left font-semibold text-white/80">Gateway</th>
-                      <th className="px-4 py-4 text-left font-semibold text-white/80">Amount</th>
-                      <th className="px-4 py-4 text-left font-semibold text-white/80">Crypto</th>
-                      <th className="px-4 py-4 text-left font-semibold text-white/80">Status</th>
-                      <th className="px-4 py-4 text-left font-semibold text-white/80">Time</th>
-                      <th className="px-4 py-4 text-left font-semibold text-white/80">More</th>
+                    <tr className="border-b border-slate-200">
+                      <th className="px-4 py-4 text-left font-semibold text-slate-700">Transaction ID</th>
+                      <th className="px-4 py-4 text-left font-semibold text-slate-700">Gateway</th>
+                      <th className="px-4 py-4 text-left font-semibold text-slate-700">Amount</th>
+                      <th className="px-4 py-4 text-left font-semibold text-slate-700">Crypto</th>
+                      <th className="px-4 py-4 text-left font-semibold text-slate-700">Status</th>
+                      <th className="px-4 py-4 text-left font-semibold text-slate-700">Time</th>
+                      <th className="px-4 py-4 text-left font-semibold text-slate-700">More</th>
                     </tr>
                   </thead>
                   <tbody>
                     {deposits.length === 0 ? (
                       <tr>
                         <td colSpan={7} className="py-12 text-center">
-                          <p className="text-white/60 text-lg">
+                          <p className="text-slate-600 text-lg">
                             No wallet found yet?{' '}
                             <span
-                              className="cursor-pointer text-teal-400 hover:underline"
+                              className="cursor-pointer text-[#2563eb] hover:underline"
                               onClick={() => setActiveView('deposit')}
                             >
                               Deposit
@@ -855,17 +855,17 @@ const Deposit = () => {
                       </tr>
                     ) : (
                       deposits.map((deposit: any) => (
-                        <tr key={deposit.id} className="border-b border-white/5">
-                          <td className="px-4 py-4 font-mono text-sm text-white/80">{deposit.transaction_id}</td>
-                          <td className="px-4 py-4 capitalize text-white/80">{deposit.gateway}</td>
-                          <td className="px-4 py-4 text-white/80">
+                        <tr key={deposit.id} className="border-b border-slate-200">
+                          <td className="px-4 py-4 font-mono text-sm text-slate-700">{deposit.transaction_id}</td>
+                          <td className="px-4 py-4 capitalize text-slate-700">{deposit.gateway}</td>
+                          <td className="px-4 py-4 text-slate-700">
                             {formatUSD(
                               typeof deposit.amount === 'string'
                                 ? parseFloat(deposit.amount)
                                 : deposit.amount || 0
                             )}
                           </td>
-                          <td className="px-4 py-4 text-white/80">
+                          <td className="px-4 py-4 text-slate-700">
                             {deposit.crypto_amount
                               ? `${formatCrypto(
                                 typeof deposit.crypto_amount === 'string'
@@ -880,18 +880,18 @@ const Deposit = () => {
                               className={`rounded-full px-3 py-1 text-xs capitalize ${deposit.status === 'completed'
                                   ? 'bg-green-500/20 text-green-400'
                                   : deposit.status === 'pending' || deposit.status === 'processing'
-                                    ? 'bg-teal-500/20 text-teal-400'
+                                    ? 'bg-[#2563eb]/20 text-[#2563eb]'
                                     : 'bg-red-500/20 text-red-400'
                                 }`}
                             >
                               {deposit.status}
                             </span>
                           </td>
-                          <td className="px-4 py-4 text-white/80">
+                          <td className="px-4 py-4 text-slate-700">
                             {new Date(deposit.created_at).toLocaleString()}
                           </td>
                           <td className="px-4 py-4">
-                            <Button variant="ghost" className="text-teal-400 hover:text-teal-300">
+                            <Button variant="ghost" className="text-[#2563eb] hover:text-[#1d4ed8]">
                               View
                             </Button>
                           </td>

@@ -107,7 +107,7 @@ const ResetPassword = () => {
 
   if (checking) {
     return (
-      <div className="min-h-screen bg-[#040a0f] flex flex-col items-center justify-center text-white/70">
+      <div className="min-h-screen bg-[#0a1e35] flex flex-col items-center justify-center text-white/70">
         <div className="h-10 w-10 animate-spin rounded-full border-2 border-teal-400 border-t-transparent" />
         <p className="mt-4 text-sm">Verifying reset link…</p>
       </div>
@@ -116,15 +116,15 @@ const ResetPassword = () => {
 
   if (invalid && !ready) {
     return (
-      <div className="min-h-screen bg-[#040a0f] flex flex-col">
+      <div className="min-h-screen bg-[#0a1e35] flex flex-col">
         <div className="flex-1 flex items-center justify-center p-6">
-          <div className="max-w-md rounded-xl border border-teal-500/15 bg-[#060d13] p-8 text-center">
+          <div className="max-w-md rounded-xl border border-teal-500/15 bg-[#132f4c] p-8 text-center">
             <h1 className="text-xl font-semibold text-white mb-2">Link invalid or expired</h1>
             <p className="text-sm text-white/60 mb-6">
               Request a new reset link from the sign-in page. If you already reset your password, sign in with your new
               password.
             </p>
-            <Button asChild className="font-semibold text-black border-0 hover:opacity-90" style={{ background: "linear-gradient(135deg, #00e5ff 0%, #00c853 100%)" }}>
+            <Button asChild className="font-semibold text-black border-0 hover:opacity-90" style={{ background: "linear-gradient(135deg, #00b4e6 0%, #14b8a6 100%)" }}>
               <Link to="/forgot-password">Request new link</Link>
             </Button>
             <div className="mt-4">
@@ -140,13 +140,13 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#040a0f] flex flex-col">
-      <div className="relative h-28 bg-[#040a0f] border-b border-teal-500/10 flex items-center justify-center overflow-hidden">
+    <div className="min-h-screen bg-[#0a1e35] flex flex-col">
+      <div className="relative h-28 bg-[#0a1e35] border-b border-teal-500/10 flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 circuit-bg opacity-40 pointer-events-none" />
         <h1 className="text-3xl font-bold text-white relative z-10">Set New Password</h1>
       </div>
       <div className="flex-1 flex items-center justify-center p-4 sm:p-8">
-        <div className="w-full max-w-md rounded-xl border border-teal-500/15 bg-[#060d13] p-6 sm:p-8">
+        <div className="w-full max-w-md rounded-xl border border-teal-500/15 bg-[#132f4c] p-6 sm:p-8">
           {error && (
             <div className="mb-4 rounded-md border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-300">{error}</div>
           )}
@@ -160,7 +160,7 @@ const ResetPassword = () => {
                   autoComplete="new-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-[#040a0f] pl-10 pr-10 text-white border-white/10"
+                  className="bg-[#0a1e35] pl-10 pr-10 text-white border-white/10"
                 />
                 <button
                   type="button"
@@ -180,7 +180,7 @@ const ResetPassword = () => {
                   autoComplete="new-password"
                   value={confirm}
                   onChange={(e) => setConfirm(e.target.value)}
-                  className="bg-[#040a0f] pl-10 text-white border-white/10"
+                  className="bg-[#0a1e35] pl-10 text-white border-white/10"
                 />
               </div>
             </div>
@@ -188,7 +188,7 @@ const ResetPassword = () => {
               type="submit"
               disabled={loading}
               className="w-full font-semibold text-black border-0 hover:opacity-90"
-              style={{ background: "linear-gradient(135deg, #00e5ff 0%, #00c853 100%)" }}
+              style={{ background: "linear-gradient(135deg, #00b4e6 0%, #14b8a6 100%)" }}
             >
               {loading ? 'Updating…' : 'Update password'}
             </Button>

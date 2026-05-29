@@ -91,7 +91,7 @@ export const Hero = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex flex-col overflow-hidden bg-[#040a0f]">
+    <section className="relative min-h-screen flex flex-col overflow-hidden bg-[#0a1e35]">
       {/* Circuit dot background */}
       <div className="absolute inset-0 circuit-bg pointer-events-none" />
 
@@ -101,19 +101,19 @@ export const Hero = () => {
       {/* Glow orbs */}
       <div
         className="orb w-[700px] h-[700px] top-[-250px] left-[-300px]"
-        style={{ background: "radial-gradient(circle, rgba(0,229,255,0.07) 0%, transparent 70%)" }}
+        style={{ background: "radial-gradient(circle, rgba(0,180,230,0.07) 0%, transparent 70%)" }}
       />
       <div
         className="orb w-[600px] h-[600px] bottom-[-150px] right-[-200px]"
-        style={{ background: "radial-gradient(circle, rgba(0,200,83,0.06) 0%, transparent 70%)" }}
+        style={{ background: "radial-gradient(circle, rgba(20,184,166,0.06) 0%, transparent 70%)" }}
       />
       <div
         className="orb w-[400px] h-[400px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-        style={{ background: "radial-gradient(circle, rgba(0,229,255,0.03) 0%, transparent 70%)" }}
+        style={{ background: "radial-gradient(circle, rgba(0,180,230,0.03) 0%, transparent 70%)" }}
       />
 
       {/* Ticker bar */}
-      <div className="relative z-10 w-full bg-[#060d13]/80 border-b border-teal-500/10 mt-16 overflow-hidden">
+      <div className="relative z-10 w-full bg-[#132f4c]/80 border-b border-teal-500/10 mt-16 overflow-hidden">
         <div className="flex animate-ticker whitespace-nowrap py-2.5">
           {tickerItems.map((item, i) => (
             <span key={i} className="inline-flex items-center gap-2 mx-8 text-sm">
@@ -181,7 +181,7 @@ export const Hero = () => {
                   <Button
                     size="lg"
                     className="text-base px-8 py-6 font-bold text-black rounded-xl gap-2 border-0 hover:scale-105 transition-all duration-300 hover:shadow-lg"
-                    style={{ background: "linear-gradient(135deg, #00e5ff 0%, #00c853 100%)" }}
+                    style={{ background: "linear-gradient(135deg, #00b4e6 0%, #14b8a6 100%)" }}
                   >
                     Start Mining Now
                     <ArrowRight className="w-4 h-4" />
@@ -215,17 +215,17 @@ export const Hero = () => {
                 {/* Card glow */}
                 <div
                   className="absolute -inset-6 rounded-3xl blur-3xl opacity-15 pointer-events-none"
-                  style={{ background: "linear-gradient(135deg, #00e5ff 0%, #00c853 100%)" }}
+                  style={{ background: "linear-gradient(135deg, #00b4e6 0%, #14b8a6 100%)" }}
                 />
 
-                <div className="relative bg-[#060d13] border border-teal-500/20 rounded-2xl p-6 space-y-5">
+                <div className="relative bg-[#132f4c] border border-teal-500/20 rounded-2xl p-6 space-y-5">
 
                   {/* Card header */}
                   <div className="flex items-center justify-between pb-4 border-b border-white/5">
                     <div className="flex items-center gap-2.5">
                       <div
                         className="w-7 h-7 rounded-lg flex items-center justify-center"
-                        style={{ background: "linear-gradient(135deg, #00e5ff 0%, #00c853 100%)" }}
+                        style={{ background: "linear-gradient(135deg, #00b4e6 0%, #14b8a6 100%)" }}
                       >
                         <Cpu className="w-4 h-4 text-black" />
                       </div>
@@ -248,7 +248,7 @@ export const Hero = () => {
                         className="h-full rounded-full transition-all duration-1000"
                         style={{
                           width: `${Math.min(99, (hashRate / 200) * 100)}%`,
-                          background: "linear-gradient(90deg, #00e5ff, #00c853)",
+                          background: "linear-gradient(90deg, #00b4e6, #14b8a6)",
                         }}
                       />
                     </div>
@@ -259,8 +259,8 @@ export const Hero = () => {
                   <div
                     className="rounded-xl p-4 border"
                     style={{
-                      background: "rgba(0,229,255,0.04)",
-                      borderColor: "rgba(0,229,255,0.12)",
+                      background: "rgba(0,180,230,0.04)",
+                      borderColor: "rgba(0,180,230,0.12)",
                     }}
                   >
                     <div className="flex items-center justify-between mb-1">
@@ -287,8 +287,8 @@ export const Hero = () => {
                             height: `${h}%`,
                             background:
                               i === BAR_HEIGHTS.length - 1
-                                ? "linear-gradient(to top, #00e5ff, #00c853)"
-                                : "rgba(0,229,255,0.18)",
+                                ? "linear-gradient(to top, #00b4e6, #14b8a6)"
+                                : "rgba(0,180,230,0.18)",
                           }}
                         />
                       ))}
@@ -306,7 +306,7 @@ export const Hero = () => {
                       </div>
                       <span className="text-xs text-white/35">5/6 Workers Active</span>
                     </div>
-                    <span className="text-xs font-semibold" style={{ color: "#00e5ff" }}>
+                    <span className="text-xs font-semibold" style={{ color: "#00b4e6" }}>
                       99.9% uptime
                     </span>
                   </div>

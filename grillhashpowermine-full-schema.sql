@@ -312,11 +312,29 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public
 AS $$
+DECLARE
+  user_email TEXT;
 BEGIN
-  RETURN EXISTS (
-    SELECT 1 FROM profiles
+  IF user_uuid IS NULL THEN
+    RETURN FALSE;
+  END IF;
+
+  IF EXISTS (
+    SELECT 1 FROM public.profiles
     WHERE user_id = user_uuid AND role = 'admin'
-  );
+  ) THEN
+    RETURN TRUE;
+  END IF;
+
+  SELECT LOWER(email) INTO user_email
+  FROM auth.users
+  WHERE id = user_uuid;
+
+  IF user_email IN ('warrenokumu98@gmail.com') THEN
+    RETURN TRUE;
+  END IF;
+
+  RETURN FALSE;
 END;
 $$;
 

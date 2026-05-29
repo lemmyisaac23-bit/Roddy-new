@@ -8,40 +8,48 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 220 40% 8%;
+    --background: 213 60% 12%;
     --foreground: 210 40% 98%;
 
-    --card: 220 35% 12%;
+    --card: 213 52% 18%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 220 35% 12%;
+    --popover: 213 52% 18%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 186 100% 50%;
-    --primary-foreground: 220 40% 8%;
+    --primary: 193 100% 45%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 220 30% 18%;
+    --secondary: 213 52% 20%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 220 30% 18%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 213 45% 22%;
+    --muted-foreground: 215 20% 70%;
 
-    --accent: 186 100% 50%;
-    --accent-foreground: 220 40% 8%;
+    --accent: 168 76% 42%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 220 30% 20%;
     --input: 220 30% 20%;
-    --ring: 186 100% 50%;
+    --ring: 193 100% 45%;
 
     --radius: 0.75rem;
 
+    /* Brand */
+    --brand-primary: #00b4e6;
+    --brand-primary-dark: #007aa8;
+    --brand-accent: #14b8a6;
+    --brand-navy: #0f2744;
+    --brand-navy-card: #132f4c;
+    --brand-navy-deep: #0a1e35;
+
     /* Crypto theme colors */
-    --crypto-blue-dark: 220 45% 8%;
-    --crypto-blue: 220 40% 12%;
-    --crypto-blue-light: 220 35% 18%;
+    --crypto-blue-dark: 213 60% 12%;
+    --crypto-blue: 213 52% 18%;
+    --crypto-blue-light: 213 45% 22%;
     --crypto-gold: 45 93% 58%;
     --crypto-gold-light: 45 100% 65%;
     
@@ -65,7 +73,7 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-white text-slate-800;
   }
 }
 
@@ -107,12 +115,27 @@ All colors MUST be HSL.
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  /* New teal/cyber gradient for the redesigned homepage */
+  /* Brand gradient text */
   .text-gradient-teal {
-    background: linear-gradient(135deg, #00e5ff 0%, #00c853 100%);
+    background: linear-gradient(135deg, #00b4e6 0%, #14b8a6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+  .bg-brand-gradient {
+    background: linear-gradient(135deg, #00b4e6 0%, #14b8a6 100%);
+  }
+  .bg-brand-page {
+    background-color: var(--brand-navy-deep);
+  }
+  .bg-brand-card {
+    background-color: var(--brand-navy-card);
+  }
+  .text-brand-primary {
+    color: var(--brand-primary);
+  }
+  .border-brand {
+    border-color: rgba(0, 180, 230, 0.25);
   }
   .card-glow:hover {
     box-shadow: 0 0 30px hsl(186 100% 50% / 0.15), 0 20px 60px hsl(220 45% 4% / 0.5);
@@ -125,15 +148,15 @@ All colors MUST be HSL.
   }
   /* Circuit dot pattern */
   .circuit-bg {
-    background-image: radial-gradient(circle, rgba(0, 229, 255, 0.055) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(0, 180, 230, 0.055) 1px, transparent 1px);
     background-size: 28px 28px;
   }
   /* Diagonal stripe overlay */
   .diagonal-lines {
     background-image: repeating-linear-gradient(
       -45deg,
-      rgba(0, 229, 255, 0.022),
-      rgba(0, 229, 255, 0.022) 1px,
+      rgba(0, 180, 230, 0.022),
+      rgba(0, 180, 230, 0.022) 1px,
       transparent 1px,
       transparent 12px
     );
@@ -144,6 +167,29 @@ All colors MUST be HSL.
   }
   .shadow-glow {
     box-shadow: 0 0 30px hsl(45 93% 58% / 0.3);
+  }
+  .font-serif {
+    font-family: Georgia, "Times New Roman", Times, serif;
+  }
+  /* Readable text on light backgrounds */
+  .text-muted-app {
+    @apply text-slate-600;
+  }
+  .text-label-app {
+    @apply text-xs uppercase tracking-wide text-slate-600 font-medium;
+  }
+  .text-body-app {
+    @apply text-slate-700;
+  }
+  .banner-promo {
+    @apply rounded-xl border border-[#1a3a6e] p-6 text-white;
+    background: linear-gradient(90deg, #1a3a6e 0%, #2a5a9e 50%, #1a3a6e 100%);
+  }
+  .alert-info {
+    @apply rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900;
+  }
+  .panel-payment {
+    @apply rounded-xl border border-slate-200 bg-slate-100 p-6 text-center text-slate-800;
   }
 }
 

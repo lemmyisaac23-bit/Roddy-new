@@ -1,15 +1,24 @@
 import { Navbar } from "@/components/Navbar";
-import { Hero } from "@/components/Hero";
-import { Features } from "@/components/Features";
-import { Statistics } from "@/components/Statistics";
+import { Footer } from "@/components/Footer";
+import { HomeBanner } from "@/components/marketing/HomeBanner";
+import { CloudMiningSection } from "@/components/marketing/CloudMiningSection";
+import { HowToStartSection } from "@/components/marketing/HowToStartSection";
+import { WhatIsCloudMiningSection, WhyChooseSection } from "@/components/marketing/InfoSections";
+import { ReviewsSection } from "@/components/marketing/ReviewsSection";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-white">
       <Navbar />
-      <Hero />
-      <Features />
-      <Statistics />
+      <main className="pt-[72px]">
+        <HomeBanner />
+        <CloudMiningSection />
+        <HowToStartSection />
+        <WhatIsCloudMiningSection />
+        <WhyChooseSection />
+        <ReviewsSection />
+      </main>
+      <Footer />
     </div>
   );
 };

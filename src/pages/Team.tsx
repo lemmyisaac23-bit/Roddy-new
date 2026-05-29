@@ -1,5 +1,4 @@
-import { Footer } from "@/components/Footer";
-import { Navbar } from "@/components/Navbar";
+import { PublicPageLayout } from "@/components/marketing/PublicPageLayout";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -7,30 +6,25 @@ const Team = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // If user is logged in, show team view from dashboard
-  // Otherwise show public team page
   if (user) {
-    navigate('/dashboard');
+    navigate("/dashboard");
     return null;
   }
 
   return (
-    <div className="min-h-screen bg-[#040a0f] text-white">
-      <Navbar />
-      <div className="container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold mb-8 text-center text-gradient-teal">Our Team</h1>
-        <p className="text-center text-white/70 mb-12 max-w-3xl mx-auto">
-          Meet the dedicated professionals behind Grillhashpowermine, working tirelessly to provide you with the best cloud mining experience.
-        </p>
-        {/* Team content would go here - same as dashboard team view */}
-        <div className="text-center py-12">
-          <p className="text-white/70">Please sign in to view our team members.</p>
-        </div>
-      </div>
-      <Footer />
-    </div>
+    <PublicPageLayout
+      title="Our Team"
+      subtitle="Meet the dedicated professionals behind Grillhashpowermine"
+    >
+      <p className="text-slate-700 leading-relaxed text-center max-w-2xl mx-auto">
+        Our team works tirelessly to provide you with the best cloud mining experience — from infrastructure engineers
+        and operations specialists to customer support professionals available around the clock.
+      </p>
+      <p className="text-slate-500 text-center mt-8">
+        Sign in to your account to view detailed team information in your dashboard.
+      </p>
+    </PublicPageLayout>
   );
 };
 
 export default Team;
-

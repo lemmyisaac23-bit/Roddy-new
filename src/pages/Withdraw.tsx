@@ -230,7 +230,7 @@ const Withdraw = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#040a0f] text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-800">
       <div className="flex">
         <UserSidebar 
           activeView={activeView === 'withdraw' ? 'withdraw' : activeView === 'log' ? 'log' : undefined}
@@ -251,11 +251,11 @@ const Withdraw = () => {
 
           {activeView === 'withdraw' ? (
             /* Withdraw Now View */
-            <div className="bg-[#060d13] border border-white/5 rounded-lg p-6 max-w-2xl">
+            <div className="bg-white border border-slate-200 rounded-lg p-6 max-w-2xl">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Amount Input */}
                 <div>
-                  <Label htmlFor="amount" className="text-white/80 mb-2 block">
+                  <Label htmlFor="amount" className="text-slate-700 mb-2 block">
                     Enter Amount (USD) *
                   </Label>
                   <Input
@@ -264,44 +264,44 @@ const Withdraw = () => {
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder="Enter amount"
-                    className="bg-white text-black border-white/10 h-12"
+                    className="bg-white text-black border-slate-200 h-12"
                     min="0"
                     step="0.01"
                   />
-                  <p className="text-white/60 text-sm mt-2">
+                  <p className="text-slate-600 text-sm mt-2">
                     Available Balance: {availableBalance.toFixed(2)} USD
                   </p>
                 </div>
 
                 {/* Gateway Selection */}
                 <div>
-                  <Label htmlFor="gateway" className="text-white/80 mb-2 block">
+                  <Label htmlFor="gateway" className="text-slate-700 mb-2 block">
                     Select Gateway *
                   </Label>
                   <Select value={gateway} onValueChange={setGateway}>
                     <SelectTrigger 
                       id="gateway"
-                      className="bg-[#040a0f] border-white/10 text-white h-12"
+                      className="bg-slate-50 border-slate-200 text-slate-800 h-12"
                     >
                       <SelectValue placeholder="Select One" />
                     </SelectTrigger>
-                    <SelectContent className="bg-[#040a0f] border-white/10">
-                      <SelectItem value="btc" className="text-white hover:bg-white/10 focus:bg-teal-500/20">
+                    <SelectContent className="bg-slate-50 border-slate-200">
+                      <SelectItem value="btc" className="text-slate-800 hover:bg-white/10 focus:bg-[#2563eb]/20">
                         BTC
                       </SelectItem>
-                      <SelectItem value="usdt-trc20" className="text-white hover:bg-white/10 focus:bg-teal-500/20">
+                      <SelectItem value="usdt-trc20" className="text-slate-800 hover:bg-white/10 focus:bg-[#2563eb]/20">
                         USDT.TRC20
                       </SelectItem>
-                      <SelectItem value="usdt-erc20" className="text-white hover:bg-white/10 focus:bg-teal-500/20">
+                      <SelectItem value="usdt-erc20" className="text-slate-800 hover:bg-white/10 focus:bg-[#2563eb]/20">
                         USDT.ERC20
                       </SelectItem>
-                      <SelectItem value="usdc" className="text-white hover:bg-white/10 focus:bg-teal-500/20">
+                      <SelectItem value="usdc" className="text-slate-800 hover:bg-white/10 focus:bg-[#2563eb]/20">
                         USDC
                       </SelectItem>
-                      <SelectItem value="eth" className="text-white hover:bg-white/10 focus:bg-teal-500/20">
+                      <SelectItem value="eth" className="text-slate-800 hover:bg-white/10 focus:bg-[#2563eb]/20">
                         ETH
                       </SelectItem>
-                      <SelectItem value="solana" className="text-white hover:bg-white/10 focus:bg-teal-500/20">
+                      <SelectItem value="solana" className="text-slate-800 hover:bg-white/10 focus:bg-[#2563eb]/20">
                         Solana (SOL)
                       </SelectItem>
                     </SelectContent>
@@ -310,7 +310,7 @@ const Withdraw = () => {
 
                 {/* Wallet Address */}
                 <div>
-                  <Label htmlFor="wallet" className="text-white/80 mb-2 block">
+                  <Label htmlFor="wallet" className="text-slate-700 mb-2 block">
                     Wallet Address *
                   </Label>
                   <Input
@@ -319,18 +319,18 @@ const Withdraw = () => {
                     value={walletAddress}
                     onChange={(e) => setWalletAddress(e.target.value)}
                     placeholder="Enter your wallet address"
-                    className="bg-white text-black border-white/10 h-12"
+                    className="bg-white text-black border-slate-200 h-12"
                   />
                 </div>
 
-                <p className="text-white/50 text-xs">
+                <p className="text-slate-600 text-xs">
                   Disclaimer: Bonus (e.g. referral bonus) is not withdrawable. Only mined balance can be withdrawn.
                 </p>
 
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  className="w-full bg-teal-500 text-black hover:bg-teal-400 h-12 text-lg font-semibold"
+                  className="w-full bg-[#2563eb] text-white hover:bg-[#1d4ed8] h-12 text-lg font-semibold"
                 >
                   Submit Withdrawal
                 </Button>
@@ -338,17 +338,17 @@ const Withdraw = () => {
             </div>
           ) : (
             /* Withdraw Log View */
-            <div className="bg-[#060d13] border border-white/5 rounded-lg overflow-hidden">
+            <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="bg-[#040a0f] border-b border-white/10">
-                      <th className="text-left py-4 px-4 text-white/80 font-semibold">Time</th>
-                      <th className="text-left py-4 px-4 text-white/80 font-semibold">Transaction ID</th>
-                      <th className="text-left py-4 px-4 text-white/80 font-semibold">Wallet</th>
-                      <th className="text-left py-4 px-4 text-white/80 font-semibold">Amount</th>
-                      <th className="text-left py-4 px-4 text-white/80 font-semibold">Status</th>
-                      <th className="text-left py-4 px-4 text-white/80 font-semibold">Action</th>
+                    <tr className="bg-slate-50 border-b border-slate-200">
+                      <th className="text-left py-4 px-4 text-slate-700 font-semibold">Time</th>
+                      <th className="text-left py-4 px-4 text-slate-700 font-semibold">Transaction ID</th>
+                      <th className="text-left py-4 px-4 text-slate-700 font-semibold">Wallet</th>
+                      <th className="text-left py-4 px-4 text-slate-700 font-semibold">Amount</th>
+                      <th className="text-left py-4 px-4 text-slate-700 font-semibold">Status</th>
+                      <th className="text-left py-4 px-4 text-slate-700 font-semibold">Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -363,22 +363,22 @@ const Withdraw = () => {
                     ) : withdrawals.length === 0 ? (
                       <tr>
                         <td colSpan={6} className="text-center py-12">
-                          <p className="text-white/60 text-lg">No Data Found!</p>
+                          <p className="text-slate-600 text-lg">No Data Found!</p>
                         </td>
                       </tr>
                     ) : (
                       withdrawals.map((withdrawal: any) => (
-                        <tr key={withdrawal.id} className="border-b border-white/5 hover:bg-white/5">
-                          <td className="py-4 px-4 text-white/80">
+                        <tr key={withdrawal.id} className="border-b border-slate-200 hover:bg-white/5">
+                          <td className="py-4 px-4 text-slate-700">
                             {new Date(withdrawal.created_at).toLocaleString()}
                           </td>
-                          <td className="py-4 px-4 text-white/80 font-mono text-sm">
+                          <td className="py-4 px-4 text-slate-700 font-mono text-sm">
                             {withdrawal.transaction_id || withdrawal.id}
                           </td>
-                          <td className="py-4 px-4 text-white/80 font-mono text-sm">
+                          <td className="py-4 px-4 text-slate-700 font-mono text-sm">
                             {withdrawal.wallet_address?.slice(0, 10)}...{withdrawal.wallet_address?.slice(-8)}
                           </td>
-                          <td className="py-4 px-4 text-white/80">
+                          <td className="py-4 px-4 text-slate-700">
                             {withdrawal.amount?.toFixed(2)} USD
                           </td>
                           <td className="py-4 px-4">
@@ -386,7 +386,7 @@ const Withdraw = () => {
                               withdrawal.status === 'completed' 
                                 ? 'bg-green-500/20 text-green-400'
                                 : withdrawal.status === 'pending'
-                                ? 'bg-teal-500/20 text-teal-400'
+                                ? 'bg-[#2563eb]/20 text-[#2563eb]'
                                 : withdrawal.status === 'rejected'
                                 ? 'bg-red-500/20 text-red-400'
                                 : 'bg-gray-500/20 text-gray-400'
@@ -395,7 +395,7 @@ const Withdraw = () => {
                             </span>
                           </td>
                           <td className="py-4 px-4">
-                            <Button variant="ghost" className="text-teal-400 hover:text-teal-300">
+                            <Button variant="ghost" className="text-[#2563eb] hover:text-teal-300">
                               View
                             </Button>
                           </td>

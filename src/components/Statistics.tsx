@@ -7,7 +7,7 @@ const stats = [
     label: "Active Miners",
     sub: "Across 150+ countries",
     color: "text-teal-400",
-    glow: "rgba(0,229,255,0.15)",
+    glow: "rgba(0,180,230,0.15)",
     bar: "from-teal-400 to-cyan-500",
     pct: 85,
   },
@@ -45,7 +45,7 @@ const stats = [
 
 export const Statistics = () => {
   return (
-    <section className="py-24 px-4 relative overflow-hidden bg-[#040a0f]">
+    <section className="py-24 px-4 relative overflow-hidden bg-[#0a1e35]">
       {/* Circuit background */}
       <div className="absolute inset-0 circuit-bg opacity-60 pointer-events-none" />
 
@@ -57,7 +57,7 @@ export const Statistics = () => {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 80% 50% at 50% 100%, rgba(0,229,255,0.04) 0%, transparent 70%)",
+            "radial-gradient(ellipse 80% 50% at 50% 100%, rgba(0,180,230,0.04) 0%, transparent 70%)",
         }}
       />
 
@@ -79,7 +79,7 @@ export const Statistics = () => {
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="group relative bg-[#060d13] border border-white/5 rounded-2xl p-7 hover:border-teal-500/20 transition-all duration-400 overflow-hidden"
+              className="group relative bg-[#132f4c] border border-white/5 rounded-2xl p-7 hover:border-teal-500/20 transition-all duration-400 overflow-hidden"
             >
               {/* Top corner glow */}
               <div
