@@ -23,6 +23,7 @@ import AboutUs from "./pages/AboutUs";
 import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import { TelegramSupportWidget } from "@/components/TelegramSupportWidget";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <HashRouter>
+          <TelegramSupportWidget />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
