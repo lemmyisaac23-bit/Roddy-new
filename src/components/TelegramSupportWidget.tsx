@@ -45,7 +45,7 @@ export function TelegramSupportWidget() {
   return (
     <div
       ref={panelRef}
-      className="fixed bottom-24 right-4 z-40 flex flex-col items-end gap-3 sm:bottom-28"
+      className="fixed bottom-6 right-4 z-50 flex flex-col items-end gap-3 sm:right-6"
       aria-live="polite"
     >
       <div

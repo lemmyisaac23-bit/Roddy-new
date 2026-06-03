@@ -199,6 +199,13 @@ All colors MUST be HSL.
   }
 }
 
+/* Tawk on the left; Telegram FAB stays bottom-right */
+#tawk-bubble-container,
+.tawk-min-container {
+  right: auto !important;
+  left: 16px !important;
+}
+
 /* Keep Tawk bubble from blocking taps on main content on small screens */
 @media (max-width: 768px) {
   #tawk-bubble-container,

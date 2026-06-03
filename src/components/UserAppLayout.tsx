@@ -1,4 +1,5 @@
 import { UserSidebar, type UserSidebarProps } from "@/components/UserSidebar";
+import { TelegramSupportWidget } from "@/components/TelegramSupportWidget";
 
 type UserAppLayoutProps = {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ export function UserAppLayout({ children, topBar, ...sidebarProps }: UserAppLayo
         <UserSidebar hasTopBar={Boolean(topBar)} {...sidebarProps} />
         <div className="flex min-w-0 flex-1 flex-col">{children}</div>
       </div>
+      <TelegramSupportWidget />
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { TelegramSupportWidget } from "@/components/TelegramSupportWidget";
 
 const TAWK_EMBED = "https://embed.tawk.to/6a19b261be64d31c34610480/default";
 
@@ -44,12 +43,7 @@ function TawkChat() {
   return null;
 }
 
-/** Live chat widgets — home page only */
+/** Tawk live chat — home page only */
 export function MarketingSupportWidgets() {
-  return (
-    <>
-      <TawkChat />
-      <TelegramSupportWidget />
-    </>
-  );
+  return <TawkChat />;
 }
