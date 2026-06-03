@@ -45,19 +45,16 @@ export function TelegramSupportWidget() {
   return (
     <div
       ref={panelRef}
-      className="fixed bottom-6 left-4 z-50 flex flex-col items-start gap-3 sm:left-6"
+      className="fixed bottom-6 left-4 z-40 flex flex-col-reverse items-start gap-3 sm:left-6 pointer-events-none"
       aria-live="polite"
     >
+      {open && (
       <div
         id="telegram-support-panel"
         role="dialog"
         aria-labelledby="telegram-support-title"
-        aria-hidden={!open}
         className={cn(
-          "w-[min(100vw-3rem,20rem)] origin-bottom-left rounded-2xl border border-slate-200 bg-white p-5 shadow-xl transition-all duration-200",
-          open
-            ? "pointer-events-auto scale-100 opacity-100"
-            : "pointer-events-none scale-95 opacity-0"
+          "pointer-events-auto w-[min(100vw-3rem,20rem)] origin-bottom-left rounded-2xl border border-slate-200 bg-white p-5 shadow-xl transition-all duration-200 animate-in fade-in zoom-in-95 duration-200"
         )}
       >
         <div className="flex items-start justify-between gap-3">
@@ -101,6 +98,7 @@ export function TelegramSupportWidget() {
         </a>
         <p className="mt-3 text-center text-xs text-slate-400">@Grillhashpowerminesupport</p>
       </div>
+      )}
 
       <button
         type="button"
@@ -109,7 +107,7 @@ export function TelegramSupportWidget() {
         aria-controls="telegram-support-panel"
         aria-label={open ? "Close Telegram support" : "Open Telegram support"}
         className={cn(
-          "flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#229ED9] focus-visible:ring-offset-2",
+          "pointer-events-auto touch-manipulation flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#229ED9] focus-visible:ring-offset-2",
           open ? "bg-slate-700 hover:bg-slate-800" : "bg-[#229ED9] hover:bg-[#1a8bc4]"
         )}
       >
