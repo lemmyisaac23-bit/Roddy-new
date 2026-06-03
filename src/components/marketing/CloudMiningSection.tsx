@@ -1,4 +1,5 @@
 import { useAuth } from "@/contexts/AuthContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { CLOUD_MINING_FEATURES } from "./marketingContent";
 import { MarketingNavButton } from "./MarketingNavButton";
 
@@ -23,6 +24,7 @@ function BitcoinCoin() {
 
 export function CloudMiningSection() {
   const { user, session, isAdmin, loading } = useAuth();
+  const isMobile = useIsMobile();
   const isLoggedIn = !loading && Boolean(user) && Boolean(session);
 
   return (
@@ -52,8 +54,8 @@ export function CloudMiningSection() {
               ) : (
                 <>
                   <MarketingNavButton to="/signup">Start Mining Now</MarketingNavButton>
-                  <MarketingNavButton to="/login" variant="outline">
-                    Log In
+                  <MarketingNavButton to={isMobile ? "/signup" : "/login"} variant="outline">
+                    {isMobile ? "Sign Up" : "Log In"}
                   </MarketingNavButton>
                 </>
               )}
