@@ -129,15 +129,6 @@ export const Navbar = () => {
                 </Link>
               </>
             )}
-            <div
-              className="hidden sm:flex items-center gap-1.5 border border-slate-200 rounded-md px-2 py-1.5 text-xs font-medium text-slate-700 bg-white shadow-sm"
-              title="Region"
-            >
-              <span className="text-base leading-none" aria-hidden>
-                🇺🇸
-              </span>
-              <span>US</span>
-            </div>
           </div>
         </div>
       </div>
