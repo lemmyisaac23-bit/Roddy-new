@@ -508,6 +508,7 @@ const Deposit = () => {
       activeView={activeView === 'deposit' ? 'deposit' : activeView === 'log' ? 'log' : undefined}
       onViewChange={handleViewChange}
       onSignOut={handleSignOut}
+      showTelegramSupport={false}
     >
         <main className="flex-1 min-w-0 p-4 sm:p-6 overflow-x-hidden pb-24 sm:pb-6">
           <header className="mb-4 sm:mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pl-11 lg:pl-0">

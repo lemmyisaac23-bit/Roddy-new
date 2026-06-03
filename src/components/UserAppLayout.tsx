@@ -4,10 +4,16 @@ import { TelegramSupportWidget } from "@/components/TelegramSupportWidget";
 type UserAppLayoutProps = {
   children: React.ReactNode;
   topBar?: React.ReactNode;
+  showTelegramSupport?: boolean;
 } & UserSidebarProps;
 
 /** Shared shell for logged-in pages: sidebar + scroll-safe main area */
-export function UserAppLayout({ children, topBar, ...sidebarProps }: UserAppLayoutProps) {
+export function UserAppLayout({
+  children,
+  topBar,
+  showTelegramSupport = true,
+  ...sidebarProps
+}: UserAppLayoutProps) {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800">
       {topBar}
@@ -15,7 +21,7 @@ export function UserAppLayout({ children, topBar, ...sidebarProps }: UserAppLayo
         <UserSidebar hasTopBar={Boolean(topBar)} {...sidebarProps} />
         <div className="flex min-w-0 flex-1 flex-col">{children}</div>
       </div>
-      <TelegramSupportWidget />
+      {showTelegramSupport && <TelegramSupportWidget />}
     </div>
   );
 }
