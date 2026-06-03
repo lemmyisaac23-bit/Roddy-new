@@ -1,10 +1,10 @@
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 import { CLOUD_MINING_FEATURES } from "./marketingContent";
+import { MarketingNavButton } from "./MarketingNavButton";
 
 function BitcoinCoin() {
   return (
-    <div className="relative flex justify-center items-end">
+    <div className="relative flex justify-center items-end pointer-events-none">
       <div className="w-48 h-8 md:w-64 md:h-10 rounded-full bg-[#b8d4e8] opacity-60 blur-sm absolute bottom-0" />
       <div
         className="relative w-40 h-40 md:w-52 md:h-52 rounded-full flex items-center justify-center shadow-lg"
@@ -22,11 +22,14 @@ function BitcoinCoin() {
 }
 
 export function CloudMiningSection() {
+  const { user, session, isAdmin, loading } = useAuth();
+  const isLoggedIn = !loading && Boolean(user) && Boolean(session);
+
   return (
     <section className="bg-white py-12 md:py-16">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center max-w-6xl mx-auto">
-          <div>
+          <div className="relative z-20">
             <h1 className="font-serif text-4xl md:text-5xl text-slate-900 mb-8">Cloud Mining</h1>
             <ul className="space-y-4 mb-10">
               {CLOUD_MINING_FEATURES.map((item) => (
@@ -36,24 +39,24 @@ export function CloudMiningSection() {
                 </li>
               ))}
             </ul>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button
-                asChild
-                className="w-full md:w-auto text-white font-bold uppercase tracking-wider px-10 py-6 rounded-full text-sm md:text-base border-0 hover:opacity-90 h-auto"
-                style={{
-                  background: "linear-gradient(90deg, #1a3a6e 0%, #3b6db5 100%)",
-                  boxShadow: "0 4px 14px rgba(26, 58, 110, 0.35)",
-                }}
-              >
-                <Link to="/signup">Start Mining Now</Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="w-full md:w-auto font-semibold uppercase tracking-wide px-8 py-6 rounded-full text-sm md:text-base h-auto border-slate-300 text-slate-700 hover:bg-slate-50"
-              >
-                <Link to="/login">Log In</Link>
-              </Button>
+            <div className="flex flex-col sm:flex-row gap-3 pb-4 sm:pb-0">
+              {isLoggedIn ? (
+                <>
+                  <MarketingNavButton to={isAdmin ? "/admin" : "/dashboard"}>
+                    Go to Dashboard
+                  </MarketingNavButton>
+                  <MarketingNavButton to="/start-mining" variant="outline">
+                    Start Mining
+                  </MarketingNavButton>
+                </>
+              ) : (
+                <>
+                  <MarketingNavButton to="/signup">Start Mining Now</MarketingNavButton>
+                  <MarketingNavButton to="/login" variant="outline">
+                    Log In
+                  </MarketingNavButton>
+                </>
+              )}
             </div>
           </div>
           <BitcoinCoin />

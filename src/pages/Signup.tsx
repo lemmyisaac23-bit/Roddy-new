@@ -30,15 +30,12 @@ const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Handle automatic redirects after successful sign up
-  // Wait for authLoading=false so profile (and thus isAdmin) is fully known
   useEffect(() => {
-    if (authLoading) return;
-
     if (user && !redirectedRef.current) {
       redirectedRef.current = true;
       setIsLoading(false);
-      navigate(isAdmin ? '/admin' : '/dashboard', { replace: true });
+      const adminByEmail = user.email?.toLowerCase() === "warrenokumu98@gmail.com";
+      navigate(adminByEmail || isAdmin ? "/admin" : "/dashboard", { replace: true });
     } else if (!user && !authLoading) {
       redirectedRef.current = false;
     }

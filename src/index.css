@@ -194,6 +194,18 @@ All colors MUST be HSL.
   .table-scroll-mobile {
     -webkit-overflow-scrolling: touch;
   }
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+}
+
+/* Keep Tawk bubble from blocking taps on main content on small screens */
+@media (max-width: 768px) {
+  #tawk-bubble-container,
+  .tawk-min-container {
+    max-width: 56px !important;
+    max-height: 56px !important;
+  }
 }
 
 @keyframes float {

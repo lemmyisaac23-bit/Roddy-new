@@ -31,7 +31,9 @@ const SignIn = () => {
       const destination =
         profile?.role === "admin" || adminByEmail || isAdmin ? "/admin" : "/dashboard";
       navigate(destination, { replace: true });
-    } else if (!user && !authLoading) {
+      return;
+    }
+    if (!user && !authLoading) {
       redirectedRef.current = false;
     }
   }, [user, session, profile, isAdmin, authLoading, navigate]);
