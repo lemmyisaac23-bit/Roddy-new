@@ -45,7 +45,7 @@ export function TelegramSupportWidget() {
   return (
     <div
       ref={panelRef}
-      className="fixed bottom-6 right-4 z-50 flex flex-col items-end gap-3 sm:right-6"
+      className="fixed bottom-6 left-4 z-50 flex flex-col items-start gap-3 sm:left-6"
       aria-live="polite"
     >
       <div
@@ -54,7 +54,7 @@ export function TelegramSupportWidget() {
         aria-labelledby="telegram-support-title"
         aria-hidden={!open}
         className={cn(
-          "w-[min(100vw-3rem,20rem)] origin-bottom-right rounded-2xl border border-slate-200 bg-white p-5 shadow-xl transition-all duration-200",
+          "w-[min(100vw-3rem,20rem)] origin-bottom-left rounded-2xl border border-slate-200 bg-white p-5 shadow-xl transition-all duration-200",
           open
             ? "pointer-events-auto scale-100 opacity-100"
             : "pointer-events-none scale-95 opacity-0"
