@@ -28,7 +28,7 @@ import {
 
 import { toast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
-import { UserSidebar } from '@/components/UserSidebar';
+import { UserAppLayout } from '@/components/UserAppLayout';
 
 interface MiningStats {
   hash_rate: number;
@@ -362,20 +362,23 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800">
-      {/* Top Navigation Bar */}
-      <header className="bg-white border-b border-slate-200 px-6 py-4 shadow-sm">
-        <div className="flex items-center justify-between">
+    <UserAppLayout
+      activeView={activeView}
+      onViewChange={(view) => setActiveView(view as typeof activeView)}
+      onSignOut={handleSignOut}
+      topBar={
+      <header className="sticky top-0 z-30 bg-white border-b border-slate-200 px-4 sm:px-6 py-3 sm:py-4 shadow-sm">
+        <div className="flex items-center justify-between gap-2 pl-11 lg:pl-0">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-[#22c55e] rounded-full flex items-center justify-center">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-8 h-8 shrink-0 bg-[#22c55e] rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-sm">GH</span>
             </div>
-            <span className="text-xl font-bold text-slate-900">Grillhashpowermine</span>
+            <span className="text-base sm:text-xl font-bold text-slate-900 truncate">Grillhashpowermine</span>
           </div>
           
           {/* Center Navigation */}
-          <nav className="hidden md:flex items-center gap-4 lg:gap-6">
+          <nav className="hidden md:flex items-center gap-4 lg:gap-6 shrink-0">
             <button
               onClick={() => {
                 setActiveView('dashboard');
@@ -405,11 +408,10 @@ const Dashboard = () => {
             </button>
           </nav>
           
-          {/* Right Side - Mobile Menu Button, Language and Logout */}
-          <div className="flex items-center gap-2 lg:gap-4">
-            {/* Mobile Menu Button */}
+          {/* Right Side - Language and Logout */}
+          <div className="flex items-center gap-1.5 sm:gap-4 shrink-0">
             <select
-              className="hidden sm:block rounded-md bg-slate-50 px-3 py-2 text-sm text-slate-800 outline-none ring-1 ring-slate-200"
+              className="max-w-[5.5rem] sm:max-w-none rounded-md bg-slate-50 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-slate-800 outline-none ring-1 ring-slate-200"
               value={language}
               onChange={(e) => {
                 const newLang = e.target.value as LanguageKey;
@@ -437,26 +439,20 @@ const Dashboard = () => {
           </div>
         </div>
       </header>
-
-      <div className="flex">
-        <UserSidebar 
-          activeView={activeView} 
-          onViewChange={(view) => setActiveView(view as any)}
-          onSignOut={handleSignOut}
-        />
-
-        <main className="flex-1 p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-x-hidden">
+      }
+    >
+        <main className="flex-1 min-w-0 p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-x-hidden pb-24 sm:pb-6">
 
           {/* My Referrals Page */}
           {activeView === 'my-referrals' && (
             <div className="space-y-6">
               {/* My Commission Section */}
-              <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-white/70 p-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-lg border border-slate-200 bg-white/70 p-4">
                 <div className="flex items-center gap-4">
                   <span className="text-slate-600">USDT</span>
                   <span className="text-slate-900 text-lg font-semibold">{commission.toFixed(4)}</span>
                 </div>
-                <Button className="bg-[#2563eb] text-white hover:bg-[#1d4ed8]">
+                <Button className="bg-[#2563eb] text-white hover:bg-[#1d4ed8] w-full sm:w-auto">
                   Withdrawal
                 </Button>
               </div>
@@ -464,12 +460,12 @@ const Dashboard = () => {
               {/* USDT Wallet Address Section */}
               <div className="space-y-2">
                 <Label className="text-slate-600">USDT Wallet Address (Require TRC20)</Label>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <Input
                     value={walletAddress}
                     onChange={(e) => setWalletAddress(e.target.value)}
                     disabled={!isEditingWallet}
-                    className="bg-slate-50 text-slate-900 border-slate-200"
+                    className="bg-slate-50 text-slate-900 border-slate-200 min-w-0"
                     placeholder="Enter your USDT wallet address"
                   />
                   <Button
@@ -485,7 +481,7 @@ const Dashboard = () => {
                         setIsEditingWallet(true);
                       }
                     }}
-                    className="bg-[#2563eb] text-white hover:bg-[#1d4ed8]"
+                    className="bg-[#2563eb] text-white hover:bg-[#1d4ed8] shrink-0 w-full sm:w-auto"
                   >
                     {isEditingWallet ? 'Save' : 'Edit'}
                   </Button>
@@ -495,11 +491,11 @@ const Dashboard = () => {
               {/* Your Referral Link Section */}
               <div className="space-y-2">
                 <Label className="text-slate-600">Your Referral Link</Label>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <Input
                     value={referralLink}
                     readOnly
-                    className="bg-slate-50 text-slate-900 border-slate-200"
+                    className="bg-slate-50 text-slate-900 border-slate-200 min-w-0"
                   />
                   <Button
                     onClick={() => {
@@ -509,7 +505,7 @@ const Dashboard = () => {
                         description: 'Referral link copied to clipboard',
                       });
                     }}
-                    className="bg-[#2563eb] text-white hover:bg-[#1d4ed8]"
+                    className="bg-[#2563eb] text-white hover:bg-[#1d4ed8] shrink-0 w-full sm:w-auto"
                   >
                     <Copy className="h-4 w-4 mr-2" />
                     Copy
@@ -541,14 +537,14 @@ const Dashboard = () => {
                 <h3 className="text-xl font-semibold text-slate-900 mb-4">
                   Your Team invited {teamMembers.length} users
                 </h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-sm">
+                <div className="table-scroll-mobile overflow-x-auto -mx-2 sm:mx-0">
+                  <table className="w-full min-w-[480px] text-left text-sm">
                     <thead className="bg-slate-100 text-slate-600">
                       <tr>
-                        <th className="py-3 px-4">User</th>
-                        <th className="py-3 px-4">Recharge Amount</th>
-                        <th className="py-3 px-4">Percent</th>
-                        <th className="py-3 px-4">Amount</th>
+                        <th className="py-3 px-3 sm:px-4">User</th>
+                        <th className="py-3 px-3 sm:px-4">Recharge Amount</th>
+                        <th className="py-3 px-3 sm:px-4">Percent</th>
+                        <th className="py-3 px-3 sm:px-4">Amount</th>
                       </tr>
                     </thead>
                     <tbody className="text-slate-700">
@@ -579,20 +575,20 @@ const Dashboard = () => {
           {activeView === 'referral-bonus-logs' && (
             <div className="rounded-lg border border-slate-200 bg-white/70 p-6">
               <h3 className="text-xl font-semibold text-slate-900 mb-4">Referral Bonus Logs</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
+              <div className="table-scroll-mobile overflow-x-auto -mx-2 sm:mx-0">
+                <table className="w-full min-w-[480px] text-left text-sm">
                   <thead className="bg-slate-100 text-slate-700">
                     <tr>
-                      <th className="py-3 px-4">User</th>
-                      <th className="py-3 px-4">Recharge amount</th>
-                      <th className="py-3 px-4">Amount</th>
-                      <th className="py-3 px-4">Time</th>
+                      <th className="py-3 px-3 sm:px-4">User</th>
+                      <th className="py-3 px-3 sm:px-4">Recharge amount</th>
+                      <th className="py-3 px-3 sm:px-4">Amount</th>
+                      <th className="py-3 px-3 sm:px-4">Time</th>
                     </tr>
                   </thead>
                   <tbody className="text-slate-700">
                     {referralBonusLogs.length === 0 ? (
                       <tr>
-                        <td colSpan={4} className="py-8 text-center text-white">
+                        <td colSpan={4} className="py-8 text-center text-slate-500">
                           No referral bonus received yet!
                         </td>
                       </tr>
@@ -616,24 +612,24 @@ const Dashboard = () => {
           {activeView === 'withdraw-logs' && (
             <div className="rounded-lg border border-slate-200 bg-white/70 p-6">
               <h3 className="text-xl font-semibold text-slate-900 mb-4">Withdraw Logs</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
+              <div className="table-scroll-mobile overflow-x-auto -mx-2 sm:mx-0">
+                <table className="w-full min-w-[640px] text-left text-sm">
                   <thead className="bg-slate-100 text-slate-700">
                     <tr>
-                      <th className="py-3 px-4">Time</th>
-                      <th className="py-3 px-4">Transaction ID</th>
-                      <th className="py-3 px-4">Wallet</th>
-                      <th className="py-3 px-4">Amount</th>
-                      <th className="py-3 px-4">Actual Amount</th>
-                      <th className="py-3 px-4">Fee</th>
-                      <th className="py-3 px-4">Status</th>
-                      <th className="py-3 px-4">Action</th>
+                      <th className="py-3 px-3 sm:px-4">Time</th>
+                      <th className="py-3 px-3 sm:px-4">Transaction ID</th>
+                      <th className="py-3 px-3 sm:px-4">Wallet</th>
+                      <th className="py-3 px-3 sm:px-4">Amount</th>
+                      <th className="py-3 px-3 sm:px-4">Actual Amount</th>
+                      <th className="py-3 px-3 sm:px-4">Fee</th>
+                      <th className="py-3 px-3 sm:px-4">Status</th>
+                      <th className="py-3 px-3 sm:px-4">Action</th>
                     </tr>
                   </thead>
                   <tbody className="text-slate-700">
                     {withdrawLogs.length === 0 ? (
                       <tr>
-                        <td colSpan={8} className="py-8 text-center text-white">
+                        <td colSpan={8} className="py-8 text-center text-slate-500">
                           No Data Found!
                         </td>
                       </tr>
@@ -772,14 +768,14 @@ const Dashboard = () => {
           {/* All Support Tickets Page */}
           {activeView === 'support-all' && (
             <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <MessageSquare className="h-8 w-8 text-[#2563eb]" />
-                  <h2 className="text-3xl font-bold text-slate-900">Support Tickets</h2>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3 min-w-0">
+                  <MessageSquare className="h-8 w-8 shrink-0 text-[#2563eb]" />
+                  <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">Support Tickets</h2>
                 </div>
                 <Button 
                   onClick={() => setActiveView('support-new')}
-                  className="bg-[#2563eb] text-white hover:bg-[#1d4ed8]"
+                  className="bg-[#2563eb] text-white hover:bg-[#1d4ed8] w-full sm:w-auto"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   New Ticket
@@ -960,11 +956,11 @@ const Dashboard = () => {
                   </div>
                   <div className="space-y-2">
                     <Label className="text-slate-600">Mobile</Label>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <select
                         value={profileData.countryCode}
                         onChange={(e) => setProfileData(prev => ({ ...prev, countryCode: e.target.value }))}
-                        className="bg-[#2563eb] text-white px-3 py-2 rounded border-slate-200"
+                        className="bg-[#2563eb] text-white px-3 py-2 rounded border-slate-200 w-full sm:w-auto sm:max-w-[8rem]"
                       >
                         {dialCodeOptions.map((opt) => (
                           <option key={`${opt.iso2}-${opt.dial}`} value={opt.dial}>
@@ -1065,11 +1061,11 @@ const Dashboard = () => {
                 </div>
                 <div className="space-y-2">
                   <Label className="text-slate-600">Setup Key</Label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Input
                       value={setupKey}
                       readOnly
-                      className="bg-slate-50 text-slate-900 border-slate-200"
+                      className="bg-slate-50 text-slate-900 border-slate-200 min-w-0"
                     />
                     <Button
                       type="button"
@@ -1786,14 +1782,14 @@ const Dashboard = () => {
               </div>
 
               <div className="mt-6 rounded-xl bg-slate-50 border border-slate-200 p-4">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <p className="text-sm text-slate-500">Need live help?</p>
                     <p className="text-slate-900 font-medium">VIP Customers Only</p>
                   </div>
                   <Button 
                     variant="outline" 
-                    className="border-[#2563eb] text-[#2563eb] hover:bg-blue-50"
+                    className="border-[#2563eb] text-[#2563eb] hover:bg-blue-50 w-full sm:w-auto"
                     onClick={() => setActiveView('support-new')}
                   >
                     <Headphones className="mr-2 h-4 w-4" />
@@ -1838,8 +1834,7 @@ const Dashboard = () => {
             </>
           )}
         </main>
-      </div>
-    </div>
+    </UserAppLayout>
   );
 };
 

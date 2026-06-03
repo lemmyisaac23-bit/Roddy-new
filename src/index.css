@@ -191,6 +191,9 @@ All colors MUST be HSL.
   .panel-payment {
     @apply rounded-xl border border-slate-200 bg-slate-100 p-6 text-center text-slate-800;
   }
+  .table-scroll-mobile {
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 @keyframes float {

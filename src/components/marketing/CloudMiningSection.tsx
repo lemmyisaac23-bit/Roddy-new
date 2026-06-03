@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { CLOUD_MINING_FEATURES } from "./marketingContent";
 
 function BitcoinCoin() {
@@ -35,16 +36,25 @@ export function CloudMiningSection() {
                 </li>
               ))}
             </ul>
-            <Link
-              to="/signup"
-              className="inline-block w-full md:w-auto text-center text-white font-bold uppercase tracking-wider px-10 py-4 rounded-full text-sm md:text-base transition-opacity hover:opacity-90"
-              style={{
-                background: "linear-gradient(90deg, #1a3a6e 0%, #3b6db5 100%)",
-                boxShadow: "0 4px 14px rgba(26, 58, 110, 0.35)",
-              }}
-            >
-              Start Mining Now
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button
+                asChild
+                className="w-full md:w-auto text-white font-bold uppercase tracking-wider px-10 py-6 rounded-full text-sm md:text-base border-0 hover:opacity-90 h-auto"
+                style={{
+                  background: "linear-gradient(90deg, #1a3a6e 0%, #3b6db5 100%)",
+                  boxShadow: "0 4px 14px rgba(26, 58, 110, 0.35)",
+                }}
+              >
+                <Link to="/signup">Start Mining Now</Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                className="w-full md:w-auto font-semibold uppercase tracking-wide px-8 py-6 rounded-full text-sm md:text-base h-auto border-slate-300 text-slate-700 hover:bg-slate-50"
+              >
+                <Link to="/login">Log In</Link>
+              </Button>
+            </div>
           </div>
           <BitcoinCoin />
         </div>

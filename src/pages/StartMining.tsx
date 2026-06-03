@@ -28,7 +28,7 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { UserSidebar } from '@/components/UserSidebar';
+import { UserAppLayout } from '@/components/UserAppLayout';
 import { depositAddressQrUrl } from '@/lib/depositQr';
 
 interface MiningPlan {
@@ -1028,18 +1028,13 @@ const StartMining = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800">
-      <div className="flex">
-        <UserSidebar
-          activeView={activeView === 'buy' ? 'buy' : activeView === 'purchased' ? 'purchased' : activeView === 'mining' ? 'mining' : undefined}
-          onViewChange={handleViewChange}
-          onSignOut={handleSignOut}
-        />
-
-        {/* Main Content */}
-        <main className="flex-1 p-4 sm:p-6 overflow-x-hidden">
-          {/* Header */}
-          <header className="mb-4 sm:mb-6 flex items-center justify-between gap-4">
+    <UserAppLayout
+      activeView={activeView === 'buy' ? 'buy' : activeView === 'purchased' ? 'purchased' : activeView === 'mining' ? 'mining' : undefined}
+      onViewChange={handleViewChange}
+      onSignOut={handleSignOut}
+    >
+        <main className="flex-1 min-w-0 p-4 sm:p-6 overflow-x-hidden pb-24 sm:pb-6">
+          <header className="mb-4 sm:mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pl-11 lg:pl-0">
             <div className="flex items-center gap-3">
               <h1 className="text-xl sm:text-2xl font-semibold">
                 {activeView === 'buy'
@@ -1056,7 +1051,7 @@ const StartMining = () => {
             <div className="flex items-center gap-2 lg:gap-4">
               {/* Language Selector */}
               <select
-                className="hidden sm:block rounded-md bg-transparent px-3 py-2 text-sm text-slate-800 outline-none ring-1 ring-white/10"
+                className="max-w-[5.5rem] sm:max-w-none rounded-md bg-slate-50 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-slate-800 outline-none ring-1 ring-slate-200"
                 value={language}
                 onChange={(e) => {
                   const newLang = e.target.value as LanguageKey;
@@ -1401,7 +1396,7 @@ const StartMining = () => {
               {purchaseStage === 'form' && !selectedPlan && (
                 <div className="mt-12">
                   <h2 className="text-2xl font-bold text-center mb-8">Our Partners</h2>
-                  <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
                     {[
                       { name: 'Google', domain: 'google.com' },
                       { name: 'Forbes', domain: 'forbes.com' },
@@ -1878,8 +1873,7 @@ const StartMining = () => {
             </DialogContent>
           </Dialog>
         </main>
-      </div>
-    </div>
+    </UserAppLayout>
   );
 };
 

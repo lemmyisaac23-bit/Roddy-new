@@ -20,7 +20,7 @@ export function AuthPageLayout({ title, subtitle, children, wide }: AuthPageLayo
             <p className="mt-2 text-center text-white/90 text-sm max-w-lg mx-auto px-4">{subtitle}</p>
           )}
         </div>
-        <div className={`container mx-auto px-4 py-10 md:py-14 ${wide ? "max-w-2xl" : "max-w-md"}`}>
+        <div className={`container mx-auto px-4 py-8 md:py-14 ${wide ? "max-w-2xl" : "max-w-md"}`}>
           <div className="bg-white border border-slate-200 rounded-2xl shadow-md p-6 sm:p-8">{children}</div>
         </div>
       </main>

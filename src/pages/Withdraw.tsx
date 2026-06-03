@@ -17,7 +17,7 @@ import {
   List,
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { UserSidebar } from '@/components/UserSidebar';
+import { UserAppLayout } from '@/components/UserAppLayout';
 
 const Withdraw = () => {
   const { user, profile, signOut } = useAuth();
@@ -230,18 +230,13 @@ const Withdraw = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800">
-      <div className="flex">
-        <UserSidebar 
-          activeView={activeView === 'withdraw' ? 'withdraw' : activeView === 'log' ? 'log' : undefined}
-          onViewChange={handleViewChange}
-          onSignOut={handleSignOut}
-        />
-
-        {/* Main Content */}
-        <main className="flex-1 p-6">
-          {/* Header */}
-          <header className="mb-6 flex items-center justify-between">
+    <UserAppLayout
+      activeView={activeView === 'withdraw' ? 'withdraw' : activeView === 'log' ? 'log' : undefined}
+      onViewChange={handleViewChange}
+      onSignOut={handleSignOut}
+    >
+        <main className="flex-1 min-w-0 p-4 sm:p-6 overflow-x-hidden pb-24 sm:pb-6">
+          <header className="mb-4 sm:mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pl-11 lg:pl-0">
             <div>
               <h1 className="text-2xl font-semibold">
                 {activeView === 'withdraw' ? 'Withdraw Now' : 'Withdraw Log'}
@@ -339,8 +334,8 @@ const Withdraw = () => {
           ) : (
             /* Withdraw Log View */
             <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
+              <div className="table-scroll-mobile overflow-x-auto -mx-2 sm:mx-0">
+                <table className="w-full min-w-[640px] text-sm">
                   <thead>
                     <tr className="bg-slate-50 border-b border-slate-200">
                       <th className="text-left py-4 px-4 text-slate-700 font-semibold">Time</th>
@@ -408,8 +403,7 @@ const Withdraw = () => {
             </div>
           )}
         </main>
-      </div>
-    </div>
+    </UserAppLayout>
   );
 };
 

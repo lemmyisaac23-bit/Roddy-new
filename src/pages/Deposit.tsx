@@ -21,7 +21,7 @@ import {
   LogOut,
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { UserSidebar } from '@/components/UserSidebar';
+import { UserAppLayout } from '@/components/UserAppLayout';
 import {
   Dialog,
   DialogContent,
@@ -504,18 +504,13 @@ const Deposit = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800">
-      <div className="flex">
-        <UserSidebar
-          activeView={activeView === 'deposit' ? 'deposit' : activeView === 'log' ? 'log' : undefined}
-          onViewChange={handleViewChange}
-          onSignOut={handleSignOut}
-        />
-
-        {/* Main Content */}
-        <main className="flex-1 p-4 sm:p-6 overflow-x-hidden">
-          {/* Header */}
-          <header className="mb-4 sm:mb-6 flex items-center justify-between gap-4">
+    <UserAppLayout
+      activeView={activeView === 'deposit' ? 'deposit' : activeView === 'log' ? 'log' : undefined}
+      onViewChange={handleViewChange}
+      onSignOut={handleSignOut}
+    >
+        <main className="flex-1 min-w-0 p-4 sm:p-6 overflow-x-hidden pb-24 sm:pb-6">
+          <header className="mb-4 sm:mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pl-11 lg:pl-0">
             <div className="flex items-center gap-3">
               <h1 className="text-xl sm:text-2xl font-semibold">
                 {activeView === 'deposit'
@@ -904,8 +899,7 @@ const Deposit = () => {
             </div>
           )}
         </main>
-      </div>
-    </div>
+    </UserAppLayout>
   );
 };
 

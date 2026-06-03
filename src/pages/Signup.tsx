@@ -7,7 +7,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Eye, EyeOff, Mail, User, Lock, Phone, MapPin } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
-import { Footer } from "@/components/Footer";
+import { AuthPageLayout } from "@/components/marketing/AuthPageLayout";
+import { themeClasses } from "@/constants/theme";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -118,7 +119,7 @@ const SignUp = () => {
         if (error.message.includes('User already registered') || error.message.includes('already registered')) {
           errorMessage = 'An account with this email already exists. Please sign in instead.';
         } else if (error.message.includes('Password should be at least')) {
-          errorMessage = 'Password must be at least 6 characters long.';
+          errorMessage = 'Password must be at least 8 characters long.';
         } else if (error.message.includes('Invalid email')) {
           errorMessage = 'Please enter a valid email address.';
         } else if (
@@ -139,236 +140,190 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a1e35] flex flex-col">
-      {/* Header Section */}
-      <div className="relative h-32 bg-[#0a1e35] border-b border-teal-500/10 flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 circuit-bg opacity-50 pointer-events-none" />
-        <div className="absolute inset-0 diagonal-lines pointer-events-none" />
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-4 left-10 w-16 h-16 rounded-full blur-2xl animate-pulse" style={{ background: "rgba(0,180,230,0.15)" }} />
-          <div className="absolute top-8 right-20 w-12 h-12 rounded-full blur-2xl animate-pulse" style={{ background: "rgba(0,200,83,0.12)", animationDelay: "0.5s" }} />
-          <div className="absolute bottom-4 left-1/4 w-20 h-20 rounded-full blur-3xl animate-pulse" style={{ background: "rgba(0,180,230,0.10)", animationDelay: "1s" }} />
+    <AuthPageLayout
+      title="Create Account"
+      subtitle="Join Grillhashpowermine and start cloud mining"
+      wide
+    >
+      <h2 className="font-serif text-xl sm:text-2xl text-slate-900 mb-4 sm:mb-6">Create Your Account</h2>
+
+      {error && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+          <p className="text-sm text-red-600">{error}</p>
+          {(error.includes('already exists') || error.includes('already registered')) && (
+            <Link to="/login" className={`mt-2 block text-sm ${themeClasses.link} font-medium`}>
+              → Go to Sign In
+            </Link>
+          )}
         </div>
-        <h1 className="text-4xl font-bold text-white relative z-10">Create Account</h1>
-      </div>
+      )}
 
-      {/* Main Content Area */}
-      <div className="flex-1 bg-[#0a1e35] flex items-center justify-center p-4 sm:p-8">
-        <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-12 items-center max-w-6xl">
-          {/* Left Column - Illustration */}
-          <div className="hidden lg:block relative h-full flex items-center justify-center">
-            <div className="relative w-full max-w-md">
-              {/* Room/Building Outline - Minimalist structure */}
-              <div className="absolute inset-0 opacity-20">
-                <div className="absolute top-0 left-0 w-32 h-32 border-2 border-white/30 rounded-lg"></div>
-                <div className="absolute top-0 right-0 w-24 h-24 border-2 border-white/30 rounded-lg"></div>
-                <div className="absolute bottom-0 left-1/4 w-40 h-32 border-2 border-white/30 rounded-lg"></div>
-              </div>
-              
-              {/* Character Illustration */}
-              <div className="relative z-10 flex items-end justify-center">
-                {/* Person Character */}
-                <div className="relative">
-                  {/* Head */}
-                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-12 h-12 bg-white/30 rounded-full border-2 border-white/40"></div>
-                  
-                  {/* Body - Teal shirt with black polka dots */}
-                  <div className="relative w-16 h-20 bg-teal-500 rounded-lg">
-                    {/* Polka dots */}
-                    <div className="absolute top-2 left-2 w-1.5 h-1.5 bg-black rounded-full"></div>
-                    <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-black rounded-full"></div>
-                    <div className="absolute top-4 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-black rounded-full"></div>
-                    <div className="absolute top-6 left-3 w-1.5 h-1.5 bg-black rounded-full"></div>
-                    <div className="absolute top-6 right-3 w-1.5 h-1.5 bg-black rounded-full"></div>
-                  </div>
-                  
-                  {/* Pants */}
-                  <div className="absolute top-20 left-1/2 -translate-x-1/2 w-12 h-12 bg-gray-600 rounded-b-lg"></div>
-                  
-                  {/* Shoes */}
-                  <div className="absolute top-28 left-1/2 -translate-x-1/2 w-16 h-3 bg-teal-500 rounded"></div>
-                  
-                  {/* Mobile Device - Large phone/tablet */}
-                  <div className="absolute top-4 left-full ml-4 w-28 h-40 bg-[#0a1e35] rounded-xl border-2 border-white/30 p-3 shadow-xl">
-                    <div className="text-white text-xs font-bold mb-2 text-center">Sign Up</div>
-                    <div className="w-10 h-10 bg-teal-500 rounded-full mx-auto mb-3 flex items-center justify-center">
-                      <User className="h-5 w-5 text-black" />
-                    </div>
-                    <div className="space-y-2 mb-3">
-                      <div className="h-2 bg-white/20 rounded w-full"></div>
-                      <div className="h-2 bg-white/20 rounded w-full"></div>
-                      <div className="h-2 bg-white/20 rounded w-full"></div>
-                    </div>
-                    <div className="flex items-center gap-1 mb-3 justify-center">
-                      <div className="w-1 h-1 bg-white/30 rounded-full"></div>
-                    </div>
-                    <div className="h-5 bg-teal-500 rounded w-full"></div>
-                  </div>
-                </div>
-                
-                {/* Plant - Yellow potted plant */}
-                <div className="absolute bottom-0 left-0">
-                  <div className="relative">
-                    {/* Pot */}
-                    <div className="w-10 h-10 bg-teal-500 rounded-full"></div>
-                    {/* Leaves */}
-                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-8 h-8 bg-emerald-400 rounded-full"></div>
-                    <div className="absolute -top-4 -left-2 w-6 h-6 bg-emerald-400 rounded-full"></div>
-                    <div className="absolute -top-6 right-0 w-6 h-6 bg-emerald-400 rounded-full"></div>
-                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-5 h-5 bg-emerald-300 rounded-full"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column - Sign Up Form */}
-          <div className="w-full max-w-md mx-auto">
-            <div className="bg-[#132f4c] rounded-xl p-4 sm:p-8 border border-teal-500/15">
-              <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Create Your Account</h2>
-              
-              {error && (
-                <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-md">
-                  <p className="text-sm text-red-400">{error}</p>
-                  {(error.includes('already exists') || error.includes('already registered')) && (
-                    <Link to="/login" className="mt-2 block text-sm text-teal-400 hover:underline font-medium">
-                      → Go to Sign In
-                    </Link>
-                  )}
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Name Fields */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="firstName" className="text-white/70">First Name</Label>
+                    <Label htmlFor="firstName">First Name</Label>
                     <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-white/40" />
+                      <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                       <Input
                         id="firstName"
                         type="text"
                         placeholder="John"
                         value={formData.firstName}
                         onChange={(e) => handleInputChange("firstName", e.target.value)}
-                        className={`pl-10 bg-[#0a1e35] text-white border-white/10 ${errors.firstName ? "border-red-500" : ""}`}
+                        className={`pl-10 ${themeClasses.input} ${errors.firstName ? "border-red-500" : ""}`}
                       />
                     </div>
-                    {errors.firstName && <p className="text-sm text-red-400 mt-1">{errors.firstName}</p>}
+                    {errors.firstName && <p className="text-sm text-red-600 mt-1">{errors.firstName}</p>}
                   </div>
                   
                   <div>
-                    <Label htmlFor="lastName" className="text-white/70">Last Name</Label>
+                    <Label htmlFor="lastName">Last Name</Label>
                     <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-white/40" />
+                      <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                       <Input
                         id="lastName"
                         type="text"
                         placeholder="Doe"
                         value={formData.lastName}
                         onChange={(e) => handleInputChange("lastName", e.target.value)}
-                        className={`pl-10 bg-[#0a1e35] text-white border-white/10 ${errors.lastName ? "border-red-500" : ""}`}
+                        className={`pl-10 ${themeClasses.input} ${errors.lastName ? "border-red-500" : ""}`}
                       />
                     </div>
-                    {errors.lastName && <p className="text-sm text-red-400 mt-1">{errors.lastName}</p>}
+                    {errors.lastName && <p className="text-sm text-red-600 mt-1">{errors.lastName}</p>}
                   </div>
                 </div>
 
                 {/* Email */}
                 <div>
-                  <Label htmlFor="email" className="text-white/70">Email Address</Label>
+                  <Label htmlFor="email">Email Address</Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-white/40" />
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                     <Input
                       id="email"
                       type="email"
                       placeholder="john@example.com"
                       value={formData.email}
                       onChange={(e) => handleInputChange("email", e.target.value)}
-                      className={`pl-10 bg-[#0a1e35] text-white border-white/10 ${errors.email ? "border-red-500" : ""}`}
+                      className={`pl-10 ${themeClasses.input} ${errors.email ? "border-red-500" : ""}`}
                     />
                   </div>
-                  {errors.email && <p className="text-sm text-red-400 mt-1">{errors.email}</p>}
+                  {errors.email && <p className="text-sm text-red-600 mt-1">{errors.email}</p>}
                 </div>
 
-                {/* Phone - Optional */}
+                <details className="rounded-lg border border-slate-200 bg-slate-50/80 p-3 sm:hidden">
+                  <summary className="cursor-pointer text-sm font-medium text-slate-700">
+                    Optional: phone & country
+                  </summary>
+                  <div className="mt-3 space-y-4">
+                    <div>
+                      <Label htmlFor="phone-mobile">Phone Number</Label>
+                      <div className="relative">
+                        <Phone className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                        <Input
+                          id="phone-mobile"
+                          type="tel"
+                          placeholder="+1 234 567 8900"
+                          value={formData.phone}
+                          onChange={(e) => handleInputChange("phone", e.target.value)}
+                          className={`pl-10 ${themeClasses.input}`}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label htmlFor="country-mobile">Country</Label>
+                      <div className="relative">
+                        <MapPin className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                        <Input
+                          id="country-mobile"
+                          type="text"
+                          placeholder="United States"
+                          value={formData.country}
+                          onChange={(e) => handleInputChange("country", e.target.value)}
+                          className={`pl-10 ${themeClasses.input}`}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </details>
+
+                <div className="hidden sm:block space-y-4">
                 <div>
-                  <Label htmlFor="phone" className="text-white/70">Phone Number <span className="text-white/40 text-xs">(Optional)</span></Label>
+                  <Label htmlFor="phone">Phone Number <span className="text-slate-400 text-xs">(Optional)</span></Label>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-3 h-4 w-4 text-white/40" />
+                    <Phone className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                     <Input
                       id="phone"
                       type="tel"
                       placeholder="+1 234 567 8900"
                       value={formData.phone}
                       onChange={(e) => handleInputChange("phone", e.target.value)}
-                      className="pl-10 bg-[#0a1e35] text-white border-white/10"
+                      className={`pl-10 ${themeClasses.input}`}
                     />
                   </div>
                 </div>
 
-                {/* Country - Optional */}
                 <div>
-                  <Label htmlFor="country" className="text-white/70">Country <span className="text-white/40 text-xs">(Optional)</span></Label>
+                  <Label htmlFor="country">Country <span className="text-slate-400 text-xs">(Optional)</span></Label>
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-3 h-4 w-4 text-white/40" />
+                    <MapPin className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                     <Input
                       id="country"
                       type="text"
                       placeholder="United States"
                       value={formData.country}
                       onChange={(e) => handleInputChange("country", e.target.value)}
-                      className="pl-10 bg-[#0a1e35] text-white border-white/10"
+                      className={`pl-10 ${themeClasses.input}`}
                     />
                   </div>
+                </div>
                 </div>
 
                 {/* Password */}
                 <div>
-                  <Label htmlFor="password" className="text-white/70">Password</Label>
+                  <Label htmlFor="password">Password</Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-white/40" />
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="Create a strong password"
                       value={formData.password}
                       onChange={(e) => handleInputChange("password", e.target.value)}
-                      className={`pl-10 pr-10 bg-[#0a1e35] text-white border-white/10 ${errors.password ? "border-red-500" : ""}`}
+                      className={`pl-10 pr-10 ${themeClasses.input} ${errors.password ? "border-red-500" : ""}`}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3 h-4 w-4 text-white/40 hover:text-white/70"
+                      className="absolute right-3 top-3 h-4 w-4 text-slate-400 hover:text-slate-600"
                     >
                       {showPassword ? <EyeOff /> : <Eye />}
                     </button>
                   </div>
-                  {errors.password && <p className="text-sm text-red-400 mt-1">{errors.password}</p>}
+                  {errors.password && <p className="text-sm text-red-600 mt-1">{errors.password}</p>}
                 </div>
 
-                {/* Confirm Password */}
                 <div>
-                  <Label htmlFor="confirmPassword" className="text-white/70">Confirm Password</Label>
+                  <Label htmlFor="confirmPassword">Confirm Password</Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-white/40" />
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                     <Input
                       id="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
                       placeholder="Confirm your password"
                       value={formData.confirmPassword}
                       onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-                      className={`pl-10 pr-10 bg-[#0a1e35] text-white border-white/10 ${errors.confirmPassword ? "border-red-500" : ""}`}
+                      className={`pl-10 pr-10 ${themeClasses.input} ${errors.confirmPassword ? "border-red-500" : ""}`}
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-3 h-4 w-4 text-white/40 hover:text-white/70"
+                      className="absolute right-3 top-3 h-4 w-4 text-slate-400 hover:text-slate-600"
                     >
                       {showConfirmPassword ? <EyeOff /> : <Eye />}
                     </button>
                   </div>
-                  {errors.confirmPassword && <p className="text-sm text-red-400 mt-1">{errors.confirmPassword}</p>}
+                  {errors.confirmPassword && <p className="text-sm text-red-600 mt-1">{errors.confirmPassword}</p>}
                 </div>
 
                 {/* Terms Agreement */}
@@ -382,48 +337,39 @@ const SignUp = () => {
                   <div className="grid gap-1.5 leading-none">
                     <Label
                       htmlFor="terms"
-                      className="text-sm font-medium leading-none text-white/70 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      className="text-sm font-medium leading-snug text-slate-600 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
                       I agree to the{" "}
-                      <Link to="/terms" className="text-teal-400 hover:underline">
+                      <Link to="/terms" className={themeClasses.link}>
                         Terms and Conditions
                       </Link>{" "}
                       and{" "}
-                      <Link to="/privacy" className="text-teal-400 hover:underline">
+                      <Link to="/privacy" className={themeClasses.link}>
                         Privacy Policy
                       </Link>
                     </Label>
                   </div>
                 </div>
-                {errors.agreeToTerms && <p className="text-sm text-red-400">{errors.agreeToTerms}</p>}
+                {errors.agreeToTerms && <p className="text-sm text-red-600">{errors.agreeToTerms}</p>}
 
-                {/* Submit Button */}
                 <Button
                   type="submit"
-                  className="w-full font-semibold py-3 text-black border-0 hover:opacity-90 transition-opacity"
-                  style={{ background: "linear-gradient(135deg, #00b4e6 0%, #14b8a6 100%)" }}
+                  className={`w-full py-3 ${themeClasses.btnPrimary}`}
                   disabled={isLoading}
                 >
                   {isLoading ? "Creating Account..." : "Create Account"}
                 </Button>
               </form>
 
-              {/* Sign In Link */}
               <div className="mt-6 text-center">
-                <p className="text-sm text-white/50">
+                <p className="text-sm text-slate-600">
                   Already have an account?{" "}
-                  <Link to="/login" className="text-teal-400 hover:underline font-medium">
+                  <Link to="/login" className={`${themeClasses.link} font-medium`}>
                     Sign In
                   </Link>
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <Footer />
-    </div>
+    </AuthPageLayout>
   );
 };
 

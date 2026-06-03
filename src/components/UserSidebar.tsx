@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 import {
   Home,
   Wallet,
@@ -33,13 +34,15 @@ interface MenuItem {
   }>;
 }
 
-interface UserSidebarProps {
+export interface UserSidebarProps {
   activeView?: string;
   onViewChange?: (view: string) => void;
   onSignOut?: () => void;
+  /** When true, offsets menu button below a full-width top bar (e.g. Dashboard) */
+  hasTopBar?: boolean;
 }
 
-export const UserSidebar = ({ activeView, onViewChange, onSignOut }: UserSidebarProps) => {
+export const UserSidebar = ({ activeView, onViewChange, onSignOut, hasTopBar = false }: UserSidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
@@ -74,6 +77,15 @@ export const UserSidebar = ({ activeView, onViewChange, onSignOut }: UserSidebar
       setSupportExpanded(true);
     }
   }, [activeView, location.pathname]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileMenuOpen]);
 
   const menuItems: MenuItem[] = [
     { label: 'Dashboard', icon: Home, path: '/dashboard' },
@@ -247,7 +259,10 @@ export const UserSidebar = ({ activeView, onViewChange, onSignOut }: UserSidebar
       <Button
         variant="ghost"
         size="icon"
-        className="lg:hidden text-white hover:bg-white/10 fixed top-4 left-4 z-50"
+        className={cn(
+          'lg:hidden fixed left-3 z-50 h-10 w-10 rounded-lg border border-slate-200 bg-white text-slate-800 shadow-md hover:bg-slate-50',
+          hasTopBar ? 'top-[4.75rem]' : 'top-3'
+        )}
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
       >
         {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -255,7 +270,7 @@ export const UserSidebar = ({ activeView, onViewChange, onSignOut }: UserSidebar
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-40 lg:z-auto w-64 min-h-screen bg-[#051d3b] border-r border-white/10 p-4 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed lg:static inset-y-0 left-0 z-40 lg:z-auto w-[min(100vw-3rem,16rem)] sm:w-64 min-h-screen bg-[#051d3b] border-r border-white/10 p-4 transform transition-transform duration-300 ease-in-out overflow-y-auto ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >

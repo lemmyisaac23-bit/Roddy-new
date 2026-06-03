@@ -1,13 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { SiteLogo } from "@/components/marketing/SiteLogo";
 
 export const Navbar = () => {
@@ -75,7 +76,34 @@ export const Navbar = () => {
             </DropdownMenu>
           </nav>
 
-          <div className="flex items-center gap-3 md:gap-4">
+          <Sheet>
+            <SheetTrigger
+              className="md:hidden p-2 rounded-md text-slate-800 hover:bg-slate-100"
+              aria-label="Open menu"
+            >
+              <Menu className="h-6 w-6" />
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[min(100vw-2rem,18rem)] bg-white">
+              <SheetHeader>
+                <SheetTitle className="text-left text-slate-900">Menu</SheetTitle>
+              </SheetHeader>
+              <nav className="mt-6 flex flex-col gap-1">
+                <Link to="/" className={navLinkClass}>Home</Link>
+                <Link to="/signup" className={navLinkClass}>Cloud Mining</Link>
+                <Link to="/about-us" className={navLinkClass}>About Us</Link>
+                <Link to="/team" className={navLinkClass}>Team</Link>
+                <Link to="/terms" className={navLinkClass}>Terms of Service</Link>
+                <Link to="/privacy" className={navLinkClass}>Privacy Policy</Link>
+                {!showSignOut && (
+                  <Link to="/login" className={`${navLinkClass} mt-4 border-t border-slate-100 pt-4`}>
+                    Log in
+                  </Link>
+                )}
+              </nav>
+            </SheetContent>
+          </Sheet>
+
+          <div className="flex items-center gap-2 sm:gap-4">
             {showSignOut ? (
               <button
                 type="button"

@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,14 +7,10 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { MiningProvider } from "@/contexts/MiningContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { PageLoader } from "@/components/PageLoader";
 import Index from "./pages/Index";
 import Login from "./pages/Signin";
 import Signup from "./pages/Signup";
-import Dashboard from "./pages/Dashboard";
-import AdminDashboard from "./pages/AdminDashboard";
-import Deposit from "./pages/Deposit";
-import Withdraw from "./pages/Withdraw";
-import StartMining from "./pages/StartMining";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import UsagePolicy from "./pages/UsagePolicy";
@@ -23,7 +20,12 @@ import AboutUs from "./pages/AboutUs";
 import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import { TelegramSupportWidget } from "@/components/TelegramSupportWidget";
+
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const Deposit = lazy(() => import("./pages/Deposit"));
+const Withdraw = lazy(() => import("./pages/Withdraw"));
+const StartMining = lazy(() => import("./pages/StartMining"));
 
 const queryClient = new QueryClient();
 
@@ -35,7 +37,6 @@ const App = () => (
         <Toaster />
         <Sonner />
         <HashRouter>
-          <TelegramSupportWidget />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
@@ -46,7 +47,9 @@ const App = () => (
               path="/dashboard"
               element={
                 <ProtectedRoute>
-                  <Dashboard />
+                  <Suspense fallback={<PageLoader />}>
+                    <Dashboard />
+                  </Suspense>
                 </ProtectedRoute>
               }
             />
@@ -54,7 +57,9 @@ const App = () => (
               path="/admin"
               element={
                 <ProtectedRoute requireAdmin>
-                  <AdminDashboard />
+                  <Suspense fallback={<PageLoader />}>
+                    <AdminDashboard />
+                  </Suspense>
                 </ProtectedRoute>
               }
             />
@@ -62,7 +67,9 @@ const App = () => (
               path="/deposit"
               element={
                 <ProtectedRoute>
-                  <Deposit />
+                  <Suspense fallback={<PageLoader />}>
+                    <Deposit />
+                  </Suspense>
                 </ProtectedRoute>
               }
             />
@@ -70,7 +77,9 @@ const App = () => (
               path="/withdraw"
               element={
                 <ProtectedRoute>
-                  <Withdraw />
+                  <Suspense fallback={<PageLoader />}>
+                    <Withdraw />
+                  </Suspense>
                 </ProtectedRoute>
               }
             />
@@ -78,7 +87,9 @@ const App = () => (
               path="/start-mining"
               element={
                 <ProtectedRoute>
-                  <StartMining />
+                  <Suspense fallback={<PageLoader />}>
+                    <StartMining />
+                  </Suspense>
                 </ProtectedRoute>
               }
             />
@@ -92,7 +103,6 @@ const App = () => (
             <Route path="/team" element={<Team />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/about" element={<AboutUs />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </HashRouter>
