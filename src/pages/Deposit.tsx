@@ -57,13 +57,15 @@ interface PreviewData {
   cryptoAmount: number;
 }
 
+const MIN_DEPOSIT_USD = 70;
+
 const gatewayOptions: GatewayOption[] = [
   {
     value: 'btc',
     label: 'BTC',
     currency: 'BTC',
     network: 'Bitcoin',
-    min: 100,
+    min: MIN_DEPOSIT_USD,
     max: 500000,
     coingeckoId: 'bitcoin',
     description: 'Instant confirmation on Bitcoin network',
@@ -73,7 +75,7 @@ const gatewayOptions: GatewayOption[] = [
     label: 'USDT.TRC20',
     currency: 'USDT',
     network: 'TRC20',
-    min: 100,
+    min: MIN_DEPOSIT_USD,
     max: 250000,
     description: 'Fast & low cost payments on Tron network',
   },
@@ -82,7 +84,7 @@ const gatewayOptions: GatewayOption[] = [
     label: 'USDT.ERC20',
     currency: 'USDT',
     network: 'ERC20',
-    min: 100,
+    min: MIN_DEPOSIT_USD,
     max: 250000,
     description: 'USDT payments on Ethereum network',
   },
@@ -91,7 +93,7 @@ const gatewayOptions: GatewayOption[] = [
     label: 'USDC',
     currency: 'USDC',
     network: 'ERC20',
-    min: 100,
+    min: MIN_DEPOSIT_USD,
     max: 250000,
     description: 'USD Coin payments (1:1 USD)',
   },
@@ -100,7 +102,7 @@ const gatewayOptions: GatewayOption[] = [
     label: 'ETH',
     currency: 'ETH',
     network: 'Ethereum',
-    min: 100,
+    min: MIN_DEPOSIT_USD,
     max: 500000,
     coingeckoId: 'ethereum',
     description: 'Native Ethereum deposits',
@@ -110,7 +112,7 @@ const gatewayOptions: GatewayOption[] = [
     label: 'Solana (SOL)',
     currency: 'SOL',
     network: 'Solana',
-    min: 100,
+    min: MIN_DEPOSIT_USD,
     max: 500000,
     coingeckoId: 'solana',
     description: 'Fast & low-fee payments on Solana network',
@@ -311,10 +313,10 @@ const Deposit = () => {
       return;
     }
 
-    if (!amount || parseFloat(amount) < 100) {
+    if (!amount || parseFloat(amount) < MIN_DEPOSIT_USD) {
       toast({
-        title: 'Minimum deposit is $100',
-        description: 'Please enter an amount of at least $100.00 to proceed.',
+        title: `Minimum deposit is ${formatUSD(MIN_DEPOSIT_USD)}`,
+        description: `Please enter an amount of at least ${formatUSD(MIN_DEPOSIT_USD)} to proceed.`,
         variant: 'destructive',
       });
       return;
@@ -546,7 +548,7 @@ const Deposit = () => {
               </div>
 
               <div className="alert-info">
-                Minimum deposit is <span className="font-semibold">$100</span>.
+                Minimum deposit is <span className="font-semibold">{formatUSD(MIN_DEPOSIT_USD)}</span>.
               </div>
 
               {depositStage === 'form' && (
